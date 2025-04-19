@@ -4,7 +4,7 @@ library(readxl)
 library(curl)
 
 # raw GitHub URL for the default/sample workbook (.xlsx)
-fallback_excel_url <- "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/your_excel_file.xlsx"
+fallback_excel_url <- "https://raw.githubusercontent.com/1Ramirez7/fintech-notebook/main/stock_trading_models/EQS_model/data/papersample.xlsx"
 
 ui <- fluidPage(
   titlePanel("EQS"),
