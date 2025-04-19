@@ -1,0 +1,266 @@
+---
+title: "Dupont analysis" 
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    html-math-method: katex
+---
+
+
+```{r}
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, ggplot2, readxl)
+
+
+data <- read_excel("data/test.xlsx")
+
+
+```
+
+
+
+```{r}
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, ggplot2)
+
+df <- read_excel("data/test.xlsx")
+
+df <- df |>
+  mutate(date = lubridate::mdy(date),
+         yquarter = yearquarter(date)) |>
+  as_tsibble(index = date)
+  
+
+df <- df |> 
+  dplyr::select(yquarter, date, IS_COGS_TO_FE_AND_PP_AND_G, IS_SGA_EXPENSE, BS_INVENTORIES, EARN_FOR_COMMON, SALES_REV_TURN) |>
+  mutate(
+    IS_COGS_TO_FE_AND_PP_AND_G = as.numeric(IS_COGS_TO_FE_AND_PP_AND_G),
+    IS_SGA_EXPENSE = as.numeric(IS_SGA_EXPENSE),
+    BS_INVENTORIES = as.numeric(BS_INVENTORIES),
+    EARN_FOR_COMMON = as.numeric(EARN_FOR_COMMON),
+    SALES_REV_TURN = as.numeric(SALES_REV_TURN), 
+    yquarter = as.character(yquarter)
+  ) |>
+  mutate(
+    `COGS`                 = `IS_COGS_TO_FE_AND_PP_AND_G` / `SALES_REV_TURN` * 100,
+    `Sell & Gen Admin Exps`= `IS_SGA_EXPENSE` / `SALES_REV_TURN` * 100,
+    `INVENTORIES`                = `BS_INVENTORIES` / `SALES_REV_TURN` * 100,
+    `Net Income`                  = `EARN_FOR_COMMON` / `SALES_REV_TURN` * 100
+  )
+
+```
+
+
+```{r}
+
+plot1 <- df |> 
+  plot_ly(
+    x = ~yquarter, 
+    y = ~`COGS`, 
+    type = 'scatter', 
+    mode = 'lines+markers',
+    line = list(shape = 'linear'),
+    marker = list(size = 6)
+  ) |>
+  layout(
+    title = "COGS Over Quarters",
+    xaxis = list(title = "Quarter"),
+    yaxis = list(title = "COGS (%)")
+  )
+
+plot2 <- df |> 
+  plot_ly(
+    x = ~yquarter, 
+    y = ~`Sell & Gen Admin Exps`, 
+    type = 'scatter', 
+    mode = 'lines+markers',
+    line = list(shape = 'linear'),
+    marker = list(size = 6)
+  ) |>
+  layout(
+    title = "Sell & Gen Admin Exps Over Quarters",
+    xaxis = list(title = "Quarter"),
+    yaxis = list(title = "Sell & Gen Admin Exps (%)")
+  )
+
+plot3 <- df |> 
+  plot_ly(
+    x = ~yquarter, 
+    y = ~`INVENTORIES`, 
+    type = 'scatter', 
+    mode = 'lines+markers',
+    line = list(shape = 'linear'),
+    marker = list(size = 6)
+  ) |>
+  layout(
+    title = "INVENTORIES Over Quarters",
+    xaxis = list(title = "Quarter"),
+    yaxis = list(title = "INVENTORIES (%)")
+  )
+
+plot4 <- df |> 
+  plot_ly(
+    x = ~yquarter, 
+    y = ~`Net Income`, 
+    type = 'scatter', 
+    mode = 'lines+markers',
+    line = list(shape = 'linear'),
+    marker = list(size = 6)
+  ) |>
+  layout(
+    title = "Net Income Over Quarters",
+    xaxis = list(title = "Quarter"),
+    yaxis = list(title = "Net Income (%)")
+  )
+
+
+plot1 
+plot2
+plot3
+plot4
+```
+
+
+```{r}
+
+
+# Convert yquarter to a numeric sequence for the trend model
+df <- df |> 
+  mutate(numeric_quarter = row_number()) # Create a numeric sequence
+
+# Fit a linear model for Net Income trend
+trend_model <- lm(`Net Income` ~ numeric_quarter, data = df)
+
+# Add predicted values for the trend line
+df <- df |> 
+  mutate(Trend = predict(trend_model))
+
+# Create the interactive plot with a trend line
+plot <- df |> 
+  plot_ly() |>
+  add_trace(
+    x = ~yquarter,
+    y = ~`Net Income`,
+    type = 'scatter',
+    mode = 'lines+markers',
+    name = 'Net Income',
+    line = list(shape = 'linear'),
+    marker = list(size = 6)
+  ) |>
+  add_trace(
+    x = ~yquarter,
+    y = ~Trend,
+    type = 'scatter',
+    mode = 'lines',
+    name = 'Trend Line',
+    line = list(dash = 'dash', color = 'red')
+  ) |>
+  layout(
+    title = "Net Income Over Quarters with Trend Line",
+    xaxis = list(title = "Quarter", tickangle = -45),
+    yaxis = list(title = "Net Income (%)"),
+    legend = list(orientation = 'h', x = 0.5, xanchor = 'center', y = -0.2)
+  )
+
+# Display the plot
+plot
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+spacer

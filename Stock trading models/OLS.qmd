@@ -1,0 +1,598 @@
+---
+title: "Statistical Research of Equity"
+author: "Eduardo I Ramirez"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 5
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+
+
+# Part 1
+
+__Visualize capital structure by plotting the debt ratio (total liabilities / total equity) and each of the following ratios in an X-Y (scatter) chart (x is the ratio, y is the debt ratio) for your firm.__
+
+The scatter plots below vizualize RDUS capital structure. 
+The Debt ratio is on the Y-axis for all plots, and all ratios are graph in the x-axis with the debt ratio always on the y-axis. 
+
+All plots have a 10% upward and downward neat band. They also have a lowess smoothed line to better show the trend..
+
+```{python}
+import pandas as pd
+import plotly.graph_objects as go
+import numpy as np
+from statsmodels.nonparametric.smoothers_lowess import lowess
+from plotly.subplots import make_subplots
+
+# Load data
+data = pd.read_excel("./data/DATA_dupontmodel.xlsx")
+
+# function
+def create_scatter_plot_traces(x_column_name, y_column_name, data):
+    quarters_to_include = [f'Q{i} {year}' for year in range(2017, 2024) for i in range(1, 5)]
+    filtered_data = data[data['Quarter'].isin(quarters_to_include)]
+
+    lowess_result = lowess(filtered_data[y_column_name], filtered_data[x_column_name])
+    smoothed_y = lowess_result[:, 1]
+    x_values = lowess_result[:, 0]
+
+    ci = 0.1 * smoothed_y
+
+    traces = [
+        go.Scatter(
+            x=filtered_data[x_column_name], 
+            y=filtered_data[y_column_name], 
+            mode='markers', 
+            name='Data', 
+            customdata=filtered_data[['Quarter']],
+            hovertemplate=f"<b>{x_column_name}:</b> %{{x}}<br><b>{y_column_name}:</b> %{{y}}<br><b>Quarter:</b> %{{customdata[0]}}<br>",
+            showlegend=False
+        ),
+        go.Scatter(
+            x=x_values, 
+            y=smoothed_y, 
+            mode='lines', 
+            name='Lowess Fit',
+            showlegend=False
+        ),
+        go.Scatter(
+            x=np.concatenate([x_values, x_values[::-1]]), 
+            y=np.concatenate([smoothed_y - ci, (smoothed_y + ci)[::-1]]), 
+            fill='toself', 
+            fillcolor='rgba(0,100,80,0.2)', 
+            line=dict(color='rgba(255,255,255,0)'), 
+            hoverinfo="skip", 
+            name='CI',
+            showlegend=False
+        )
+    ]
+
+    return traces
+
+# Function to create a subplot figure
+def create_subplot_figure(data):
+    fig = make_subplots(rows=2, cols=4, subplot_titles=[
+        'ROA', 
+        'T. Asset Turn.',
+        'PPE to Asset', 
+        'Market to Book',
+        'Dep to Asset',
+        'ROE',
+        'Current ratio',
+        'Div Pay Out'
+    ])
+
+    # Add traces
+    metrics = ['Retun on Assets (ROA)', 'Total asset turnover', 'PPE to Asset ratio', 'Market to Book ratio', 
+               'Depreciation to asset ratio', 'Return on Equity (ROE)', 'Current ratio', 'dividend pay out ratio']
+
+    for i, metric in enumerate(metrics, start=1):
+        for trace in create_scatter_plot_traces(metric, 'debt-equity ratio', data):
+            fig.add_trace(trace, row=(i-1)//4 + 1, col=(i-1)%4 + 1)
+
+    # Update layout
+    fig.update_layout(height=800, width=1200, title_text="") # title
+    
+    # Show the plot
+    fig.show()
+
+# Create and display
+create_subplot_figure(data)
+
+```
+
+
+
+## P1 Task 2
+
+__2. Do the observations all lie in a neat band with an upward or downward trend? If not, what may be some competing influences (maybe alternative ratios) that detract from a simple relationship between the debt ratio and this ratio?__
+No, all ratios are extremely volatile, and they all have data points outside the upward and downward bands. 
+All ratios besides the Current ratio have a downward trend as the debt-equity ratio increases. 
+In general most ratios have around half the data points within 10% confidence interval bands. An OLS regression model done on this ratios prove that these ratios explained 67% of the dependent variable (Debt ratio) so their is many more independent variables that can affect debt-equity ratio and any of the other ratios. 
+
+## OLS Regression Result
+
+__Debt Ratio as the dependent variable and all eight ratios are in model__
+
+
+debt-equity ratio = at + B1('Total asset turnover') + B2('Retun on Assets (ROA)') + B3('PPE to Asset ratio') + B4('Market to Book ratio') + B5('Depreciation to asset ratio') + B6('Return on Equity (ROE)') + B7('Current ratio') + B8('dividend pay out ratio') + error
+
+```{python}
+#| echo: true
+# -----------------First Regression------------------
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from statsmodels.regression.linear_model import OLS
+import statsmodels.api as sm
+file_path = "./data/DATA_dupontmodel.xlsx"
+df = pd.read_excel(file_path)
+X = df[['Total asset turnover', 'Retun on Assets (ROA)', 'PPE to Asset ratio', 'Market to Book ratio', 'Depreciation to asset ratio', 
+        'Return on Equity (ROE)', 'Current ratio', 'dividend pay out ratio']]
+y = df['debt-equity ratio']
+X_with_constant = sm.add_constant(X)
+model = OLS(y, X_with_constant).fit()
+print(model.summary())
+```
+
+## P1 Task 3 
+
+
+__3. Based on your observations, are any of these ratios more important in explaining the capital structure of your firm? Discuss the ones that you think might be. The M&M propositions indicate the leverage is explained by ROA and ROE when taxes are present or bankruptcy is a perceived possibility. Are any of these ratios correlated with ROE and ROA?__
+
+Base on the regression output, this observations do not explained the capital structure of the firm (debt-equity), as explained this variables explained this part of the debt-equity but the intercept shows there is many more things that impact debt-equity rather than this variables. Total asset turnover has a very high p-value which means it is not statistically significant in this model for the Debt ratio. ROE, and ROA are the only ratios that were statistically significant to the model. 
+In the analysis, ROE and ROA are the only significant ratios, it implies these measures are critical in understanding the firm's performance and risk profile in relation to the debt ratio. They are consistent with the M&M framework but also highlight the deviations from the ideal conditions proposed by M&M, such as the presence of taxes and bankruptcy risk, which affect the firm's capital structure decision. This ties back to the M&M propositions, especially when considering implications like taxes and bankruptcy risks, which affect how ROE and ROA relate to the firm's leverage and overall value. As shown in the below figure for Optimal capitl strucutre and the cost of capital for RDUS. As the Debt to equity level increases WACC will first enojoy the benefits of the tax shield but will eventually face consequences and expereinced higher cost of equity. The right graph illustrates the rise in cost of equity as RDUS takes on more Debt. 
+
+```{python}
+#| echo: true
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import numpy as np
+from scipy.interpolate import interp1d
+
+# Given WACC, RU, RE, and D/E values
+WACC = np.array([0.1219, 0.12022592, 0.118915831, 0.118017781, 0.117595616, 0.117735128, 0.118553412, 0.120213529, 0.122948367, 0.127101203, 0.133198373])
+DE = np.array([0.000, 0.076, 0.162, 0.260, 0.373, 0.503, 0.656, 0.837, 1.057, 1.328, 1.670])
+RU = np.full_like(WACC, 0.1219)
+RE = np.array([0.1219, 0.1244, 0.1273, 0.1305, 0.1342, 0.1386, 0.1436, 0.1496, 0.1569, 0.1658, 0.1772])
+interp_funcs = [interp1d(DE, metric, kind='cubic') for metric in [WACC, RU, RE]]
+DE_new = np.linspace(min(DE), max(DE), 100)
+WACC_new, RU_new, RE_new = [func(DE_new) for func in interp_funcs]
+min_WACC_index = np.argmin(WACC_new)
+min_WACC_DE = DE_new[min_WACC_index]
+
+# Create subplots
+fig = make_subplots(rows=1, cols=2, subplot_titles=('WACC and RU', 'RE'))
+
+# Add traces for WACC and RU
+fig.add_trace(go.Scatter(x=DE, y=WACC, mode='markers', name='WACC Markers', marker=dict(color='blue')), row=1, col=1)
+fig.add_trace(go.Scatter(x=DE_new, y=WACC_new, mode='lines', name='WACC Line', line=dict(color='blue')), row=1, col=1)
+fig.add_trace(go.Scatter(x=DE, y=RU, mode='markers', name='RU Markers', marker=dict(color='red')), row=1, col=1)
+fig.add_trace(go.Scatter(x=DE_new, y=RU_new, mode='lines', name='RU Line', line=dict(color='red')), row=1, col=1)
+
+# Add traces for RE 
+fig.add_trace(go.Scatter(x=DE, y=RE, mode='markers', name='RE Markers', marker=dict(color='green')), row=1, col=2)
+fig.add_trace(go.Scatter(x=DE_new, y=RE_new, mode='lines', name='RE Line', line=dict(color='green')), row=1, col=2)
+
+# Add a vertical line 
+fig.add_shape(type="line", x0=min_WACC_DE, y0=min(WACC_new), x1=min_WACC_DE, y1=max(WACC_new), line=dict(color="blue", width=2), row=1, col=1)
+fig.add_annotation(x=min_WACC_DE + 0.05, y=max(WACC_new), text="Optimal WACC", showarrow=False, font=dict(size=12, color="blue"), row=1, col=1)
+
+# Update layout for both subplots
+fig.update_layout(title_text='Optimal Capital Structure and the Cost of Capital', xaxis_title='debt-equity ratio (D/E)', yaxis_title='Cost of Capital (%)')
+
+# Show the figure
+fig.show()
+
+```
+
+## P1 Task 4
+
+__4. M&M tell us that a firm cannot increase its value by increasing its debt (Section 16.3), but that increased debt can change the required returns for shareholders. In the text (Section 17.4), we read Ben Graham argues for high dividend payout leading to high market values for a firm.__
+
+
+__Has your firm tended to increase its leverage?__
+Yes, RDUS has increased its reliance on debt for growth as evidenced by increases in debt-equity ratio and equity multiplier.
+
+__Does your firm pay increased returns to shareholders via dividends?__
+Yes, they pay dividend but is less than a dollar per year per share. 
+
+__If they do, describe how are the dividends paid/net income and the debt ratio are related?__
+Base on previous reports on RDUS (Term paper 1 & 2), RDUS has done several investments that have increased their operational cost, debt, interest, and contractual obligations. The results of this investments has resulted in highest cost of equity due to higher risk for investors. RDUS investment decisions have affected their Debt ratio the most, and the regression model done in this paper gives the dividend pay out ratio a coefficient of 0.1077 and a p-value of 0.225 and thus the dividend pay out ratio is not statistically significant to affect the debt ratio. Base on this results dividends paid/net income and the debt ratio are not related or their is not enough statiscal evidence to determined a relationship.  
+
+
+__If they do not, how does the firm pay increased returns to shareholders?__
+
+They don't increase returns to shareholders, and shareholders have been losing money on RDUS this past couple quaters as their equity in RDUS is losing value like no ones business. 
+
+
+
+# Part 2 
+
+## OLS Regression Results
+
+__Estimate the following regression using data from your selected firm: debt-equity ratio = at + B1('Total asset turnover') + B2('Retun on Assets (ROA)') + B3('PPE to Asset ratio') + B4('Market to Book ratio') + B5('Depreciation to asset ratio') + B6('Return on Equity (ROE)') + B7('Current ratio') + B8('dividend pay out ratio') + error__
+
+```{python}
+#| echo: true
+# -----------------First Regression------------------
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from statsmodels.regression.linear_model import OLS
+import statsmodels.api as sm
+file_path = "./data/DATA_dupontmodel.xlsx"
+df = pd.read_excel(file_path)
+X = df[['Total asset turnover', 'Retun on Assets (ROA)', 'PPE to Asset ratio', 'Market to Book ratio', 'Depreciation to asset ratio', 
+        'Return on Equity (ROE)', 'Current ratio', 'dividend pay out ratio']]
+y = df['debt-equity ratio']
+X_with_constant = sm.add_constant(X)
+model = OLS(y, X_with_constant).fit()
+print(model.summary())
+```
+
+## P2 Task 1 & 2
+
+__Discuss whether these variables are highly correlated.__
+
+The model explains 67% of the model which means there is still 33% of other variables that affect the debt-equity ratio. 
+
+__Total asset turnover:__
+Coefficient: -0.3908
+P>|t|: 0.434
+This variable has a high p-value, suggesting it is not statistically significant in this model.It does not exhibit a high correlation with the debt-equity ratio.
+__Retun on Assets (ROA):__
+Coefficient: -32.6595
+P>|t|: 0.051
+This variable is borderline significant (p-value just above 0.05) and could be important in the model.It shows a potential but not definitive correlation with the debt-equity ratio.
+__PPE to Asset ratio:__
+Coefficient: 1.1454
+P>|t|: 0.619
+This variable is not statistically significant in this model and does not demonstrate a high correlation with the debt-equity ratio.
+__Market to Book ratio:__
+Coefficient: -0.0462
+P>|t|: 0.791
+This variable is not statistically significant. It does not show a high correlation with the debt-equity ratio.
+__Depreciation to asset ratio:__
+Coefficient: -72.0921
+P>|t|: 0.094
+This variable is close to being significant, indicating potential importance but not conclusively so. There may be a moderate correlation with the debt-equity ratio.
+__Return on Equity (ROE):__
+Coefficient: 18.5054
+P>|t|: 0.047
+This variable is statistically significant and likely important in the model. It shows a high correlation with the debt-equity ratio.
+__Current ratio:__
+Coefficient: 0.1077
+P>|t|: 0.225
+This variable is not statistically significant and does not indicate a high correlation with the debt-equity ratio.
+__dividend pay out ratio:__
+Coefficient: -0.0071
+P>|t|: 0.879
+This variable is not statistically significant and does not demonstrate a high correlation with the debt-equity ratio.
+
+
+
+## P2 Task 3
+
+__Does your regression have good fit? If not, make at least one change to the regression that improves the fit of the regression. Report the results of your new regression and describe the two most important results in your regression.__ 
+
+Can definetly make a few changes, first I will test if other models have a better fit for this variables. 
+
+
+
+### Analysis on the Regression Results
+
+__Checking for VIF__ 
+
+Checking for multicollinearity among the variables, examining the statistical significance of each variable, and assessing the overall fit of the model. High VIF values (typically above 5 or 10) indicate high multicollinearity.
+
+
+```{python}
+#| echo: true
+# -------------First Regression Model VIF calculations ----------------------------------
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+from statsmodels.regression.linear_model import OLS
+
+# data from Excel
+file_path = "./data/DATA_dupontmodel.xlsx"
+df = pd.read_excel(file_path)
+X = df[['Total asset turnover', 'Retun on Assets (ROA)', 'PPE to Asset ratio', 
+        'Market to Book ratio', 'Depreciation to asset ratio', 
+        'Return on Equity (ROE)', 'Current ratio', 'dividend pay out ratio']]
+y = df['debt-equity ratio']
+model = LinearRegression()
+model.fit(X, y)
+X_with_constant = sm.add_constant(X)
+ols_model = OLS(y, X_with_constant).fit()
+vif_data = pd.DataFrame()
+vif_data["Variable"] = X.columns
+vif_data["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+r_squared = ols_model.rsquared
+p_values = ols_model.pvalues
+coefficients = model.coef_
+intercept = model.intercept_
+print("Intercept:", intercept)
+print("Coefficients:", coefficients)
+print("\nVIF Data:\n", vif_data)
+print("\nR-squared:", r_squared)
+print("\nP-values:\n", p_values)
+
+```
+
+
+
+1. __Multicollinearity:__ The Variance Inflation Factor (VIF) results suggest that there is significant multicollinearity among some of the variables. 'Total asset turnover', 'Retun on Assets (ROA)', 'PPE to Asset ratio', 'Depreciation to asset ratio', and 'Return on Equity (ROE)' have VIF values much higher than the common thresholds of 5 or 10, indicating high multicollinearity. This means these variables are highly correlated with each other.
+
+2. __Model Fit:__ The R-squared value is approximately 0.675, which means that about 67.5% of the variability in the debt-equity ratio is explained by the model. 
+
+
+### Revised Regression Model with Reduced Multicollinearity:
+
+To improve the model fit, considering the high multicollinearity and the lack of statistical significance for some variables, removing some of the highly correlated variables or those that are not statistically significant. 
+
+__New Regression avoding multicollinary__
+
+Removing 'Retun on Assets (ROA)' and 'PPE to Asset ratio', the results are as follows:
+
+```{python}
+#| echo: true
+# Revised Regression Model with Reduced Multicollinearity --------------------------------------------------------
+import pandas as pd
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+from statsmodels.regression.linear_model import OLS
+import statsmodels.api as sm
+
+# Load
+file_path = "./data/DATA_dupontmodel.xlsx"
+df = pd.read_excel(file_path)
+X = df[['Total asset turnover', 'Retun on Assets (ROA)', 'PPE to Asset ratio', 
+        'Market to Book ratio', 'Depreciation to asset ratio', 
+        'Return on Equity (ROE)', 'Current ratio', 'dividend pay out ratio']]
+y = df['debt-equity ratio']
+X_revised = X.drop(['Retun on Assets (ROA)', 'PPE to Asset ratio'], axis=1)
+X_revised_with_constant = sm.add_constant(X_revised)
+revised_ols_model = OLS(y, X_revised_with_constant).fit()
+vif_data_revised = pd.DataFrame()
+vif_data_revised["Variable"] = X_revised.columns
+vif_data_revised["VIF"] = [variance_inflation_factor(X_revised.values, i) for i in range(X_revised.shape[1])]
+r_squared_revised = revised_ols_model.rsquared
+p_values_revised = revised_ols_model.pvalues
+print("Revised Model Summary:\n", revised_ols_model.summary())
+print("\nRevised VIF Data:\n", vif_data_revised)
+```
+
+
+1. __Multicollinearity:__ The revised model still shows multicollinearity concerns, particularly for 'Total asset turnover', 'Depreciation to asset ratio', and 'Current ratio', as indicated by their high VIF values. While 'Return on Equity (ROE)' has a reduced VIF, it's still above the threshold.
+
+2. __Statistical Significance:__ The only variable that shows statistical significance in the revised model is 'Depreciation to asset ratio' (p < 0.05). Other variables do not exhibit statistical significance at the 5% level.
+
+3. __Model Fit:__ The R-squared value has decreased to 0.600, suggesting that about 60% of the variability in the debt-equity ratio is explained by this revised model. This is lower than the original model, indicating a reduced explanatory power.
+4. __Model Summary:__ The regression coefficients indicate how each variable influences the debt-equity ratio. For example, the 'Depreciation to asset ratio' has a large negative coefficient, suggesting a strong inverse relationship with the debt-equity ratio.
+
+Given these results, it appears that reducing multicollinearity through variable removal slightly compromised the model's explanatory power.
+
+Like explained in __Part 2 task 1 & 2__ most variables in the revised model are not statistically significant, indicating they may not be strong predictors for the firm's capital structure. The result for 'Depreciation to asset ratio' shows caution, given the remaining multicollinearity issues.
+
+
+# Improving Model fit
+
+__Different Regression models and differebt dependent variables__
+
+To improve model fit, further steps include exploring alternative variables, considering interaction effects, or applying different statistical techniques such as ridge or lasso regression, which can handle multicollinearity better.There is high multicollinearity between ROA and ROE or in other words they are highly correlated with each other.
+
+
+## Best regression fit for this model
+
+__tested for Linear Regression, Ridge Regression, Lasso Regression and Random Forest__
+
+```{python}
+#| echo: true
+# -----------------Regression machine model to test between different regression models-----
+# test 1
+import pandas as pd
+
+# Load the provided Excel file
+file_path = "C://Users//eduar//OneDrive - BYU-Idaho//2024 Winter//455 ECON//3 Term paper//regression_log.xlsx"
+data = pd.read_excel(file_path)
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Assuming 'data' is your DataFrame
+# Replace 'debt-equity ratio - 5' with the actual column name of your dependent variable
+y = data['debt-equity ratio - 5']
+X = data.drop('debt-equity ratio - 5', axis=1)
+
+# Handling missing values
+X_filled = X.fillna(X.mean())
+
+# Splitting the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_filled, y, test_size=0.2, random_state=42)
+
+# Defining the models
+models = {
+    "Linear Regression": LinearRegression(),
+    "Ridge Regression": Ridge(),
+    "Lasso Regression": Lasso(),
+    "Random Forest": RandomForestRegressor()
+}
+
+# Function to evaluate each model
+def evaluate_model(model, X_train, y_train, X_test, y_test):
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+    return mse, r2
+
+# Evaluating the models
+results = {}
+for name, model in models.items():
+    mse, r2 = evaluate_model(model, X_train, y_train, X_test, y_test)
+    results[name] = {"Mean Squared Error": mse, "R^2 Score": r2}
+
+results_df = pd.DataFrame(results).T
+
+# Printing the results
+print(results_df)
+
+
+
+```
+
+
+This results show that the Linear regression is the best fit. So the techniques such as ridge or lasso regression, which can handle multicollinearity better did dot work better. Linear Regression has the best fit with an R^2 of 0.95. Note: this test ran multiple dependent variables, and my main regression is an ols linear not just linear, which all contributed to not getting an R^2 of 0.67 like in my main regression.
+
+
+## Testing different variables
+
+__The following uses the same model, but shows the results for each variable as a dependent variable. Thismodel runs an OLS linear regression.__
+
+
+
+```{python}
+# test 8 ----- same as test 7 & 6 but w/out the sklearn import
+# ---------- option to change between reports- - - -- - - - - - -
+
+import pandas as pd
+import statsmodels.api as sm
+
+# Load the data
+file_path = "C://Users//eduar//OneDrive - BYU-Idaho//2024 Winter//455 ECON//3 Term paper//data1.xlsx"
+data = pd.read_excel(file_path)
+
+# Columns to exclude
+columns_to_exclude = ['Quarter'] # 'column_name_2', 'column_name_3'
+data = data.drop(columns=columns_to_exclude)
+
+# Iterate
+for column in data.columns:
+    print(f"Evaluating OLS model with dependent variable: {column}")
+    y = data[column]
+    X = data.drop(column, axis=1)
+
+    # Handling missing values
+    X_filled = X.fillna(X.mean())
+    y_filled = y.fillna(y.mean())
+
+    # Add a constant to the independent variables
+    X_filled = sm.add_constant(X_filled)
+
+    # Define and fit the OLS model
+    model = sm.OLS(y_filled, X_filled)
+    results = model.fit()
+
+
+    # Print 
+    
+    print(f"R^2 Score: {results.rsquared}")
+
+    # print("Additional Details:")
+    # print(f"R^2 Score: {results.rsquared}")
+    # print(f"Adjusted R^2 Score: {results.rsquared_adj}")
+    # print(f"Mean Squared Error: {results.mse_model}")
+
+    # print(results.summary())
+
+```
+
+
+This results show that other variables in this model can have a better fit for a higher R^2. Regression models can sure help indentify what explains certain financials, but for RDUS and its current financial standings, and the state of the economy do not allow to properly show this relationship well. To many other variables not included in this data that affect the ratios. 
+
+
+
+
+# Just for fun
+
+__I ran a linear regression on a larger data set__
+
+
+This was done just to see which variables had the highest R^2, and included more than 60 ratios and financial metrics. Most financial metrics were formatted to the natural log for better regressional fit. 
+
+debt-equity ratio improve to 0.96 R^2. 
+The following had a higher R^2 than Debt-Equity:
+Long-term debt ratio
+Total debt ratio
+quick ratio
+taxes
+Total Costs
+Day's sales in receivables
+Total Current Liabilities
+Total Liabilities and Shareholders Equity
+and many more. 
+Dividend Per Share had an R^2 of 1, but it is useless due to multicollinary. 
+
+There is many finanical ratios and financial reports that explain each other 100% so they make this statistical analysis useless, but they can be removed to find a good fit model. This was a great paper, which gave me ideas how I can create a model that looks for certain patters, like determinig firms that have been making great capital strucutre decisions and bad capital structure decisions. Making machine learning models to find certain patters in a firm can help quickly indentify key details in a firm's financials which can useful for many things like trading, investments, management, and figuring out what firms are up to. 
+
+
+__Done with paper,the following is just a list of the results for the larger data set so it is long__
+
+```{python}
+# test 4 ----------- same as test 3 but this mdoel automatically test all different variables as dependent variables---- 
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Load the data
+file_path = "C://Users//eduar//OneDrive - BYU-Idaho//2024 Winter//455 ECON//3 Term paper//regression_log.xlsx"
+data = pd.read_excel(file_path)
+
+# Iterate through each column in the DataFrame
+for column in data.columns:
+    print(f"Evaluating model with dependent variable: {column}")
+
+    # Set the current column as the dependent variable
+    y = data[column]
+    X = data.drop(column, axis=1)
+
+    # Handling missing values
+    X_filled = X.fillna(X.mean())
+    y_filled = y.fillna(y.mean())
+
+    # Split the dataset
+    X_train, X_test, y_train, y_test = train_test_split(X_filled, y_filled, test_size=0.2, random_state=42)
+
+    # Define and train the model
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+
+    # Evaluate the model
+    y_pred = model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+
+    print(f"Mean Squared Error: {mse}")
+    print(f"R^2 Score: {r2}\n")
+
+    # Optionally, you can also print the coefficients for the model
+    # for i, col in enumerate(X_train.columns):
+    #     print(f"{col}: {model.coef_[i]}")
+
+
+
+```

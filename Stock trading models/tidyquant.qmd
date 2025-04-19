@@ -1,0 +1,276 @@
+---
+title: "test fin code"
+---
+
+spacer
+
+Load library and sample stock
+
+```{r}
+# libraries
+library(tidyquant)
+library(conflicted)
+
+```
+
+spacer
+
+```{r}
+library(tidyquant)
+
+# this code sees the options for tq_get on the help tab
+?tq_get
+
+# Get the list of `get` options
+tq_get_options()
+
+# list of options for tq_performance
+?tq_performance
+```
+
+spacer
+
+# Get S&P 500 data for past ten years - TAKES LONG TO GENERATE
+
+```{r}
+# Get S&P 500 data for past ten years - TAKES LONG TO GENERATE
+sp_500 <- tq_index("SP500") %>%
+  tq_get(get = "stock.prices")
+sp_500
+
+# Transmute monthly returns for SP 500 (this second half is dependent on the first half)
+sp_500 %>%
+  group_by(symbol) %>%
+  tq_transmute(adjusted, mutate_fun = monthlyReturn)
+```
+
+# See what functions available for fun options
+
+```{r}
+tq_transmute_fun_options()
+```
+
+spacer
+
+```{r}
+# Load libraries
+library(dplyr)
+
+# Use FANG data set
+
+# Get returns for individual stock components grouped by symbol
+Ra <- FANG %>%
+    group_by(symbol) %>%
+    tq_transmute(adjusted, periodReturn, period = "monthly", col_rename = "Ra")
+
+# Get returns for SP500 as baseline
+Rb <- "^GSPC" %>%
+    tq_get(get  = "stock.prices",
+           from = "2010-01-01",
+           to   = "2015-12-31") %>%
+    tq_transmute(adjusted, periodReturn, period = "monthly", col_rename = "Rb")
+
+# Merge stock returns with baseline
+RaRb <- left_join(Ra, Rb, by = c("date" = "date"))
+```
+
+spacer
+
+# Retrieve Data from FRED
+
+```{r}
+# Retrieve data from FRED 
+
+cpi_data <- tq_get("CPALTT01USM657N", get = "economic.data", from = "1900-01-01")
+
+# View data
+cpi_data
+
+
+```
+
+spacer
+
+# Get stock price for equity
+
+```{r}
+# the dates can be remove to get defualt, remove the end date portion to just get from the start to most recent. 
+library(tidyquant)
+library(dplyr)
+
+AAPL_price <- tq_get("AAPL", from = "2008-08-22", to = "2009-08-23")
+
+
+```
+
+spacer
+
+# price high low w/ avrg band
+
+```{r}
+# this code is made to do multiple stocks, but can just do 1 if needed. 
+library(tidyquant)
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+# Get some data
+FANG <- c("CHWY", "SMID", "TRN") %>%
+    tq_get(get = "stock.prices", from = "2018-01-01", to = "2024-08-01")
+
+# Setup dates for zoom window
+end <- ymd("2024-08-01")
+start <- end - weeks(3)
+
+# Visualize!!!
+n_mavg <- 20 # Number of periods (days) for moving average
+d <- FANG %>%
+    dplyr::filter(date >= start - lubridate::days(2 * n_mavg)) |>
+    ggplot(aes(x = date, y = close, group = factor(symbol))) +
+    geom_candlestick(aes(open = open, close = close, high = high, low = low)) +
+    geom_bbands(aes(high = high, low = low, close = close),
+                ma_fun = SMA, n = n_mavg, sd = 2, size = 0.5) +
+    labs(title = "Multiple Stocks at Once!",
+         subtitle = "Quickly visualize the volatility of four stocks at once",
+         x = "", y = "Closing Price") +
+    coord_x_date(xlim = c(start, end)) +
+    facet_wrap(~ symbol, scales = "free_y") +
+    theme_tq() +
+    scale_y_continuous(labels = scales::label_dollar())
+# Add dropped_aes
+d
+```
+
+spacer
+
+# Stock price trade plot high/low/open/close
+
+```{r}
+# Load necessary libraries
+library(tidyquant)
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+
+# Get data for a single stock
+stock_data <- tq_get("AAPL", get = "stock.prices", from = "2025-04-10", to = "2025-04-18")
+
+# Setup dates for zoom window
+end <- ymd("2025-04-18")
+start <- end - weeks(2) # edit lenght of plot
+
+stock_data
+
+
+```
+
+spacer
+
+# get last 3 closing price: max 1200 tickers
+
+use this excel function to get rid of US Equity
+
+=SUBSTITUTE(A2, " US Equity", "")
+
+```{r}
+# Load necessary libraries
+library(tidyquant)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(readxl)
+library(writexl)
+
+# Read the list of tickers from the Excel file
+tickers <- read_excel("EQS_model/data/getlclosingprices.xlsx")$ticker
+
+# Function to get stock data for a single ticker
+get_stock_data <- function(ticker) {
+  tryCatch({
+    stock_data <- tq_get(ticker, get = "stock.prices", from = "2024-09-11", to = "2024-09-17")
+    
+    # Proceed only if data is successfully retrieved
+    if (nrow(stock_data) > 0) {
+      stock_data <- stock_data %>%
+        select(date, close) %>%
+        mutate(ticker = ticker) %>%
+        pivot_wider(names_from = date, values_from = close)
+      return(stock_data)
+    } else {
+      return(data.frame(ticker = ticker)) # Return a data frame with just the ticker if no data found
+    }
+  }, error = function(e) {
+    # Return an empty data frame with a ticker column in case of error
+    return(data.frame(ticker = ticker))
+  })
+}
+
+# Apply the function to each ticker and bind the results
+combined_data <- bind_rows(lapply(tickers, get_stock_data))
+
+# Write the data to an Excel file
+write_xlsx(combined_data, "All_Tickers_Stock_Data.xlsx")
+
+# Output path of the file to confirm
+print("Data has been saved to All_Tickers_Stock_Data.xlsx")
+
+
+
+```
+
+spacer
+
+# Common Stock vs close price graph.
+
+```{r}
+# code is from "C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\RDUS Capital Structure Analysis.qmd"
+# Load necessary libraries
+library(tidyquant)
+library(dplyr)
+library(lubridate)
+library(plotly)
+conflicts_prefer(plotly::layout)
+
+# Set the stock symbol
+stock_symbol <- "genk"  # Change this to use another stock
+
+# Get data for the chosen stock
+stock_data <- tq_get(stock_symbol, get = "stock.prices", from = "2019-01-01", to = "2024-08-31")
+
+# Define the date range for the plot
+start_date <- ymd("2024-08-01")
+end_date <- ymd("2024-08-31")
+
+# Filter data for the specified date range and prepare both close price and volume
+filtered_data <- stock_data %>%
+    dplyr::filter(date >= start_date & date <= end_date) %>%
+    mutate(volume_millions = volume / 1000000)  # Adjust volume
+
+# Create plotly object
+fig <- plot_ly(data = filtered_data, x = ~date) %>%
+    add_trace(y = ~close, name = 'Close Price', type = 'scatter', mode = 'lines', line = list(color = 'blue')) %>%
+    add_trace(y = ~volume_millions, name = 'Volume (millions)', type = 'scatter', mode = 'lines', line = list(color = 'red'), yaxis = 'y2') %>%
+    layout(
+        title = paste(stock_symbol, "Trading Close Prices and Volume Over Time"),
+        xaxis = list(title = "Date"),
+        yaxis = list(title = "Close Price"),
+        yaxis2 = list(title = "Volume (millions)", overlaying = "y", side = "right", showgrid = FALSE),
+        legend = list(title = "Variable"),
+        showlegend = TRUE
+    )
+
+# Output the plot
+fig
+
+```
+
+```{r}
+# Load necessary libraries
+library(quantmod)
+
+?quantmod
+
+```
+
+spacer
+
+spacer

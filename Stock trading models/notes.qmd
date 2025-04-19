@@ -1,0 +1,223 @@
+---
+title: "Notes on files for Finance"
+subtitle: "to easily find files"
+author: "Eduardo I Ramirez"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 5
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+This notes are for the 2024 winter/ 455 folder
+
+# DUPONT
+
+This file has a dupont analysis on RDUS, first part includes other firms, butlast part of code has useful charts to better see RDUS movements in cost and expenses. 
+
+`c:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\FIN\Trading Models\Dupont.qmd`
+
+
+
+# CAPITAL STRUCTURE ANALYSIS
+
+## RDUS Capital Structure Analysis
+
+The following is doing a capital structure analysis on RDUS
+
+`"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\RDUS Capital Structure Analysis.qmd"`
+
+- it has the 3 scenarios graph
+- common stock vs net income comparison
+- book leverage graph (maybe not needed)
+- common stock vs last price plot
+
+    looking at the spread between the two and the correlation. for example when last price is low but common stock is high can show bad signs as normally they stay about the same. 
+- days comaprison for receivables, inventory, and payable
+
+    This is a good plot, useful to see firm trends. 
+- graphs for the fed funds, treasury notes, spread, and recession model. 
+- The following files are extras for this qmd
+
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term4.html"`
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term4.qmd"`
+
+
+
+## Delete
+
+`"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\delete.qmd"`
+
+This file has the code for the debt-to-equity ratio comparison vs other financial for RDUS.  
+I need to find the qmd file this code is used in!
+
+
+
+# REGRESSION MODELS
+
+
+## Regression_models 
+
+This file is use in term3 paper.
+
+`C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\Regression_models.qmd`
+
+This qmd file was taken from 381, and set up to run ols models on RDUS. There is not specific structure to this file and the models/code in this file was use in other files. 
+
+Useful ides
+- Use to see how certain financial metrics correlate with each other. 
+
+    It will be usefull to see how some firms FA correlates more with certain FA's and different for other firms. This can come in handy when looking into how much certain FA affect a firms income etc. 
+- the following are extra files for this qmd file
+
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\3Term_regression_models_notes.qmd"`
+
+
+# TERM PAPERS
+
+## Term2
+
+`"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term2.qmd"`
+`"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term2.html"`
+
+- Key ratios table 
+- Some firm comparison of FA & ratios & WACC capm
+- plots comparing CAPM, WACC & ROE 
+
+    good plots to use
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\TERM2indi.py"` This python file is code use for this plots
+- profit average table group comparison
+- profict margin comparison plots
+- plots for `Current Performance vs. Recession vs Growth: Now (Expected Scenario)`
+
+    This plots are good to see how well a firm would do in certain scenarions which can be useful when finding value equities, and to see how firms would do in general. 
+    This code also opens ideas for other scenarios 
+- Optimal WACC plots/
+
+    This can be useful to see how close the firm is to optimal wacc etc.
+    When doing this plots I use hypothetical numbers so the need to find the best reliable numbers is needed, for example the effective tax rate of the firm. 
+- Dupont table comparion for the 3 scenarios
+
+    Numbers was inputted manually!
+- extra files to test code. 
+
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\Termpaper2.html"`
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\Termpaper2.qmd"`
+
+
+## term3
+
+`"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term3.qmd"`
+`"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term3.html"`
+
+This file is the statistical report done on RDUS 
+
+- debt ratio comparison vs other FAs. 
+
+    This plot show good trends, and code is use for most besides having to input the column names manually, I would have to streamline the columns chosen to avoid inputting them manually. 
+    extra files for this plot `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term3_P1_Figs.html"` & `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term3_P1_Figs.qmd"`
+- OLS regression model 
+
+    This is a good model, but I didnt do the BP test. I need to recheck econometrics to better understand this. 
+- OLS comparison to optimal WACC
+- another ols results with specific FAs to use 
+
+    not to useful for other firms since it is specific, but this specific example can be use. especially for commonly use FAs.
+- VIF results
+- more stats research. This is one subject I need to learn and master. 
+- extra files for term3 that i havent made notes on
+
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term3_extras.qmd"`
+
+
+## term4
+
+look at this section `## RDUS Capital Structure Analysis`
+
+## term5
+
+This files can be link to the tab html file. 
+- This files are just notes 
+
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term5.html"`
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term5.qmd"`
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term5index.html"`
+    `"C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\term5index.qmd"`
+
+# Extra files
+
+
+## term paper # 5
+
+- The following html files are for the term paper #5 when I was testing the different tabs. 
+- I think Term paper # 5 is what I actaully submitted, but i dont think so since i cant find the qmd file for it. 
+- The way this files were made - first generated one qmd file, open the html file in qmd and copy the html code - paste on this html files
+- so there is not actual qmd file, but just copy and paste. In 355 i learn to include other qmd files so maybe this steps are no longer needed. 
+`C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\Term paper # 5.html`
+`C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\Term paper # 5 - Copy.html`
+
+
+## HTMl set up for tabs
+
+This file is a sample to use for different tabs, and i required html code generated first before it can be paste into this template.
+I don't think this will be needed since I learn to do different tabs, and this process can be messy, but still good to know.
+One thing to do is to use a specific word for the start and end of each tab so the start and end of each tab can be easily search using that word.
+
+`C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\HTML set up for tabs.html`
+
+
+## 455W6CostofCapital 
+
+This file jsut has a capm model for TSLA. most if not all numbers are input manually so this file is good for a sample, but sort of useless. 
+
+`C:\Users\eduar\OneDrive - BYU-Idaho\Desktop\Coding\2024 Winter\455\455W6CostofCapital.qmd`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# spacer

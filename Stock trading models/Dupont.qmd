@@ -1,0 +1,288 @@
+---
+title: "RDUS Capital Structure Analysis"
+subtitle: "Course: Financial Economics"
+author: "Eduardo I Ramirez"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 5
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+
+# Ignore for now
+
+I need to find the best use for this table, but may not end up using. 
+
+```{python}
+#| echo: false
+import pandas as pd
+
+pd.set_option('display.max_columns', None)  # This line sets the display to show all columns
+
+# Load the Excel file
+df = pd.read_excel("C://Users//eduar//OneDrive - BYU-Idaho//Desktop//Coding//FIN//Trading Models//data//DATA_dupontmodel.xlsx")
+
+
+# Company names and their corresponding columns in the dataframe
+companies = {
+    "RDUS": "Q_RDUS",
+    "CLH": "Q_CLH",
+    "CWST": "Q_CWST",
+    "NVRI": "Q_NVRI",
+    "RSG": "Q_RSG",
+    "WM": "Q_WM"
+}
+
+# to add a new metric. Only need to add new metric name here. ------Metric---
+# Suffix for metric names
+average_suffix = " Average"
+std_dev_suffix = " Std Dev"
+
+# Mapping of financial metric column suffixes to base names
+metric_bases = {
+    '35WACC Cost of Equity_': 'CAPM',
+    '37Weighted Average Cost of Cap_': 'WACC',
+    '65Return on Equity (ROE)_': 'ROE',
+    '68Profit margin - 1_': 'Profit',
+    '66Retun on Assets (ROA) - 2_': 'ROA',
+    '84Equity multiplier - 3_': 'Equity Multiplier',
+    '29Diluted EPS - 4_': 'EPS',
+    '52debt-equity ratio - 5_': 'Debt to Equity',
+    '51Total debt ratio - 6_': 'Total Debt Ratio',
+    '55Times interest earned ratio - 7_': 'Times Interest Earned Ratio',
+    '85Total asset turnover - 8_': 'Total Asset Turnover',
+    '67ROA using EBIT instead of net inc - 9_': 'ROA (EBIT)',
+    '71PPE to Asset ratio - 10_': 'PPE to Total Asset',
+    '72Market to Book ratio - 11_': 'Market to Book Ratio',
+    '73Depreciation to asset ratio - 12_': 'Depreciation to Asset',
+    '74Retained earnings to asset ratio - 13_': 'Retained Earnings to Asset',
+    '46Current ratio - 14_': 'Current Ratio'
+}
+
+# Dictionary to store the averages
+statistics = {}
+
+# When adding a new metric this is the second place I need to add. I will add the code formula for the new metric here ----------metric formula----------
+# Calculating metrics for each company and each financial metric
+for company in companies:
+    statistics[company] = {}
+    for metric_column_suffix, metric_base_name in metric_bases.items():
+        column_name = metric_column_suffix + company
+        average_value = df[column_name].mean()
+        std_dev_value = df[column_name].std()
+        statistics[company][metric_base_name + average_suffix] = average_value
+        statistics[company][metric_base_name + std_dev_suffix] = std_dev_value
+
+# Printing the results 
+#for company, stats in statistics.items():
+#    print(f"{company}:")
+#    for stat_name, value in stats.items():
+#        print(f"  {stat_name}: {value:.5f}")
+#    print()
+
+# this is for Quarto as print does not do so well.
+# Convert the statistics dictionary to a DataFrame
+stats_df = pd.DataFrame.from_dict(statistics)
+
+# Transpose the DataFrame so that companies are on the rows and metrics are on the columns
+stats_df = stats_df.transpose()
+
+# Display the DataFrame in a formatted table
+stats_df
+
+
+```
+
+
+
+
+
+```{python}
+#| echo: false
+import pandas as pd
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+# File path
+df = pd.read_excel("C://Users//eduar//OneDrive - BYU-Idaho//Desktop//Coding//FIN//Trading Models//data//DATA_dupontmodel.xlsx")
+
+# Company names and their corresponding columns in the dataframe
+companies = {
+    "RDUS": "Q_RDUS",
+    "CLH": "Q_CLH",
+    "CWST": "Q_CWST",
+    "NVRI": "Q_NVRI",
+    "RSG": "Q_RSG",
+    "WM": "Q_WM"
+}
+
+# Plotting WACC, CAPM, and ROE for each company
+for company, q_column in companies.items():
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+    # WACC and CAPM on primary y-axis
+    fig.add_trace(go.Scatter(x=df[q_column], y=df['35WACC Cost of Equity_' + company], name='CAPM'), secondary_y=False)
+    fig.add_trace(go.Scatter(x=df[q_column], y=df['37Weighted Average Cost of Cap_' + company], name='WACC'), secondary_y=False)
+
+    # ROE on secondary y-axis
+    fig.add_trace(go.Scatter(x=df[q_column], y=df['65Return on Equity (ROE)_' + company], name='ROE'), secondary_y=True)
+
+    # Update layout
+    fig.update_layout(title=f'{company} WACC, CAPM, & ROE Comparison', title_x=0.5)
+    fig.update_xaxes(title_text='')
+    fig.update_yaxes(title_text='WACC & CAPM', secondary_y=False)
+    fig.update_yaxes(title_text='ROE (%)', tickformat=".2%", secondary_y=True)
+    fig.update_layout(legend=dict(x=.85, y=1, traceorder="normal"))
+
+    fig.show()
+
+
+
+
+```
+
+
+
+
+
+
+
+```{python}
+
+import pandas as pd
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import numpy as np
+
+# Load data from Excel
+df = pd.read_excel("C://Users//eduar//OneDrive - BYU-Idaho//Desktop//Coding//FIN//Trading Models//data//DATA_dupontmodel.xlsx")
+
+# Define the columns for expenses and sales
+expense_columns = {
+    '2Cost of Revenue_RDUS': 'Cost of Revenue (%)',
+    '4Selling_Gen_ Admin_Exps_RDUS': 'Selling & General Admin Expenses (%)',
+    '6Interest_Expense_RDUS': 'Interest Expense (%)',
+    '79other expenses _RDUS': 'Other Expenses (%)'
+}
+sales_column = '77Sales_RDUS'
+
+# Calculate percentages of each expense relative to sales
+for col in expense_columns.keys():
+    df[expense_columns[col]] = df[col] / df[sales_column] * 100
+
+# Determine the number of plots
+num_plots = len(expense_columns)
+cols = 2  # Change the number of columns based on your preference and screen size
+rows = (num_plots + 1) // cols  # Calculate rows needed
+
+# Initialize the plot with subplot configuration
+fig = make_subplots(rows=rows, cols=cols, subplot_titles=list(expense_columns.values()))
+
+# Add traces for each expense as a percentage of sales and their trend lines
+for idx, (col, label) in enumerate(expense_columns.items()):
+    row, col = (idx // cols) + 1, (idx % cols) + 1
+    # Scatter plot of the original data
+    fig.add_trace(
+        go.Scatter(x=df['Q_RDUS'], y=df[label], mode='lines+markers', name=label),
+        row=row, col=col
+    )
+    # Calculate trend line
+    # Handle missing values by dropping them
+    clean_df = df.dropna(subset=['Q_RDUS', label])
+    # Fit a linear regression
+    if clean_df.shape[0] > 1:  # Ensure there are at least two points for regression
+        x = np.arange(len(clean_df['Q_RDUS']))  # Create a numerical x axis for regression
+        fit = np.polyfit(x, clean_df[label], 1)
+        trend_line = np.polyval(fit, x)
+        # Add trend line to the plot
+        fig.add_trace(
+            go.Scatter(x=clean_df['Q_RDUS'], y=trend_line, mode='lines', name=f'Trend of {label}', line=dict(color='red')),
+            row=row, col=col
+        )
+
+# Update the layout with axis labels and settings
+fig.update_layout(
+    title='Expenses as a Percentage of Sales Over Time',
+    xaxis_title='Quarter',
+    yaxis_title='Percentage (%)',
+    showlegend=False,
+    width=900,  # Adjust the total width here to fit your display or presentation medium
+    height=400 * rows,  # Adjust the height based on the number of rows
+    margin=dict(l=20, r=20, t=100, b=20)  # Adjust margins to fit titles and axis labels
+)
+
+# Adjust individual axes if needed
+for i in range(1, num_plots + 1):
+    fig.update_xaxes(title_text='Quarter', row=(i-1)//cols + 1, col=(i-1)%cols + 1)
+    fig.update_yaxes(title_text='Percentage (%)', row=(i-1)//cols + 1, col=(i-1)%cols + 1)
+
+# Show the plot
+fig.show()
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# spacer

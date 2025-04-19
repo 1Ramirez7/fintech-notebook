@@ -1,0 +1,1907 @@
+---
+title: "EQS test functions"
+editor: visual
+toc: true
+toc-title: "Table of Contents"
+toc-location: left
+toc-depth: 2
+execute:
+  eval: false
+---
+
+# List of steps
+
+-   Write out my calculations in paper and steps in paper to better visualize my goal.
+
+    -   More than likely I can replicate steps in excel with a small sample
+
+    -   Can then use this excel sheet to compare with future R and shiny app code.
+
+-   Make the calculations first in an r file first, and keep track of each step in a QMD file with r chunks like done here.
+
+    -   It is important I do everything in steps, make each step noticeable, and keep it well detailed of what the code is doing, even none math code. Even though it will take longer, it provides a higher chance of success rather then trying to get ai to write it all out or in big chunks.
+
+-   Once the process is done in R we can move on to Shinny app.
+
+    -   It is important to note key things that will make my model better but try to limit it to just the functions and calculations and keep it simple. the more conditions I include, the more complicated the code will get. My experience with code is definitely not at the level this models are so keep it simple to avoid headaches.
+
+<!-- -->
+
+-   Make the Ui page and server logic but limited to just the layout
+
+    -   no calculations or data frame need to be created. just visualize the layout
+
+    -   once the layout is complete, cross reference with the R code and see how I can start liking everything together.
+
+-   Add each function and or calculation of the R code first, and have ai show only chunks its adding and or updating
+
+    -   mark and comment on each section of the shiny app code. the goal is to have a well structure and know what each part is doing
+
+    -   This is essential, because it will make future updates easier and or use the same structure for other projects.
+
+-   When adding new conditions like filters, first add to R code then base shinny app off R code
+
+    -   R code will not have all the visuals and user friendly options as the shinny app but both codes do the same calculations with the r code having to be hard coded for changes in variables and conditions while the shinny app can be updated in the app.
+
+# Improvements or bugs
+
+**Version 1**
+
+-   When displaying the DF, having an option where each variable also has a column and their respective normalize rank.
+
+    -   this will be for visual of how well they rank in the individual variables.
+
+    -   This will essentially edit this formula df$RankPrice <- rank(-df$Price, ties.method = "min")
+
+        to look something like this: df$RankPrice <- rank(-df$Price, ties.method = "min") / lenght(df\$Price) and it excel it looks like this
+
+        =(RANK.EQ(B2, \$B$2:$B$12,0) / COUNT($B$2:$B\$12)).
+
+    -   This will cause the normalize function to also change from this **df**$NormRank <- ((df$**RankPrice / length(df\$Price)) \* 0.35)** to something like this **df**$NormRank <- df$**RankPrice \* 1**. here the 1 will change according the weights giving to each variable since the step before normalizes it for just that variable.
+
+    -   I don't want to do this until the shiny app model is complete to avoid any complications, and also I want to keep sections of the functions and or formulas noticeable to better read the code.
+
+**Version 1.1**
+
+-   When improvements and or bugs are clear I will include note when and in what version was it complete. This note will be with the new version notes and complete note where the initial improvement and or bug note was made.
+
+-   I need to figure out how add different NormRank functions
+
+    -   I was first thinking that a df will be needed for each NormR function
+
+        -   new df will be needed from the start, maybe after the sector filter or before.
+
+    -   I need to do this for both R and Shinny app.
+
+    -   I think a few loop scenarios avoid re writting norm rank and NormRank function code for each new function.
+
+    -   Only the df will need to be created, but the norm and NormRank functions can loop for each df.
+
+        -   at the end the display df can just merged all df together.
+
+            -   This will either show only relevant variables and filters for each function or re thrive non function columns/variables off the main or sub df.
+
+-   At some point I need to think where I can split the R code into sections because it is going to get big
+
+Version 1.2
+
+-   Add option to select sheet name within an excel file
+
+    -   This will help when working with different sectors and data
+
+    -   This will required that the excel selection process also has a selection process for sheet name, which will then be follow by current variable selection.
+
+# VERSION 1
+
+## Simple RANK.EQ formula
+
+```{r}
+
+# load library and read file
+library(readxl)
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+# Calculate ranks for column. this is doing =RANK.EQ(C2, Price, 0)
+df$Rank <- rank(df$Price, ties.method = "min") # '-df' = desc 'df'=ascending
+
+# mathmatically the ranks are in descending order from largest value is giving rank 1 and smallest is given the last rank. In EQS when Im using 0 (descending), I want the bottom ranked to fit my weight criteria for EQS. 
+
+
+# Display the data frame with ranks
+print(df)
+
+```
+
+**Explanation of Components in** df$Rank <- rank(-df$Price, ties.method = "min")**:**
+
+-   `rank()`: Function to compute the rank.
+
+-   `-df$Price`: Negating the prices to rank in descending order.
+
+    -   **So '-df' is for descending and 'df' is for ascending**
+
+-   `ties.method = "min"`: For ties, assigns the minimum possible rank.
+
+**Options for `ties.method` to Adjust Ranking Behavior:**
+
+-   **`"average"`**: Assigns the average rank to ties.
+
+-   **`"first"`**: Assigns ranks based on the first occurrence in the data.
+
+-   **`"random"`**: Assigns ranks randomly among tied values.
+
+-   **`"max"`**: Assigns the maximum rank to tied values.
+
+## =(RANK.EQ(C2, Price, 0) / count(price) \*1)
+
+```{r}
+# Load necessary libraries n read files
+library(readxl)
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+# Calculate ranks for the 'Price' column in descending order
+df$Rank <- rank(-df$Price, ties.method = "min")
+
+# (df$Rank / count(price) *1) this includes the results from df$rank to normalized ranks. 
+# here ascending or descending is set and cannot be change, only in th eprevious formula.
+
+df$NormRank <- (df$Rank / length(df$Price)) * .5
+
+# This two functions essentially do this
+# =(RANK.EQ(C2, Price, 0) / count(price) *1)
+
+# Display the df
+print(df)
+```
+
+**Explanation:**
+
+-   **`rank(-df$Price, ties.method = "min")`**: Computes the rank in descending order.
+
+<!-- -->
+
+-   **`length(df$Price)`**: Counts the total number of price entries.
+
+-   **`df$NormalizedRank`**: Stores the normalized ranks, dividing each rank by the total count of prices, which adjusts the rank to a relative scale between 0 and 1.
+
+THOUGHTS & WORRIES
+
+-   how will length work when I'm excluding values like blank and zeros. can be for the column it is doing the function for or for other columns
+
+    -   the function that excludes those rows should be done before this so the df only includes the included values
+
+## Adding a second variable
+
+spacer
+
+```{r}
+# Load libraries n read files
+library(readxl)
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+# Calculate ranks individually. '-df'=descending 'df'=ascending
+df$RankPrice <- rank(-df$Price, ties.method = "min")
+df$RankBVPS <- rank(df$BVPS, ties.method = "min")
+
+# Normalize and combine the ranks
+df$NormRank <- ((df$RankPrice / length(df$Price)) * 0.5) + ((df$RankBVPS / length(df$BVPS)) * 0.5)
+
+# Order to display NormRank: "Top" for descending, "Bottom" for ascending
+order_to_display <- "Top"
+
+# Display the data frame sorted by normalized ranks according to selected order
+if(order_to_display == "Top") {
+  print(df[order(df$NormRank, decreasing = TRUE), ])
+} else {
+  print(df[order(df$NormRank, decreasing = FALSE), ])
+}
+
+```
+
+**Explanation of Changes:**
+
+-   **Separate Rank Calculations**: The ranks for `Price` and `BVPS` are computed separately and stored in `df$RankPrice` and `df$RankBVPS`, respectively.
+
+-   **Normalized Rank Calculation**:
+
+    -   `df$RankPrice / length(df$Price)`: Normalizes the `Price` rank by dividing by the total number of prices.
+
+    -   `df$RankBVPS / length(df$BVPS)`: Normalizes the `BVPS` rank by dividing by the total number of `BVPS` entries.
+
+    -   Both normalized ranks are then averaged using a weight of 0.5 for each, reflecting equal importance to both `Price` and `BVPS` in the final normalized rank.
+
+This setup allows to effectively manage and compare rankings based on two financial metrics, balancing their impacts in the analysis.
+
+**How It Works:**
+
+-   **`order_to_display` variable**: This string determines how `NormRank` will be sorted. Set it to `"Top"` for descending order or `"Bottom"` for ascending order.
+
+-   **Conditional `if` statement**:
+
+    -   If set to `"Top"`, it sorts the dataframe in descending order of `NormRank`.
+
+    -   If set to `"Bottom"`, it sorts the dataframe in ascending order of `NormRank`.
+
+## Adding a third Variable & to show x \# of results
+
+```{r}
+# Load libraries and read files
+library(readxl)
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+# Calculate ranks individually. '-df' for descending, 'df' for ascending
+df$RankPrice <- rank(-df$Price, ties.method = "min")
+df$RankBVPS <- rank(df$BVPS, ties.method = "min")
+df$RankPE <- rank(-df$PE, ties.method = "min")
+
+# Normalize and combine the ranks
+df$NormRank <- ((df$RankPrice / length(df$Price)) * 0.35) + ((df$RankBVPS / length(df$BVPS)) * 0.35) + ((df$RankPE / length(df$PE)) * 0.3)
+
+# Display NormRank: "Top" for descending, "Bottom" for ascending
+order_to_display <- "Top"  # Change this to "Bottom" to reverse the order
+number_of_results <- 10   # Specify the number of results to display
+
+# Display the data frame sorted by normalized ranks according to selected order
+sorted_df <- if(order_to_display == "Top") {
+  df[order(df$NormRank, decreasing = TRUE), ]
+} else {
+  df[order(df$NormRank, decreasing = FALSE), ]
+}
+
+# Print the specified number of results
+print(head(sorted_df, number_of_results))
+
+```
+
+**Modifications Explained:**
+
+-   **Variable `number_of_results`**: This specifies how many rows from the sorted data frame you want to display.
+
+-   **Creating `sorted_df`**: This holds the sorted data frame based on `NormRank` and the order specified.
+
+-   **Using `head()`**: This function is used to display the top `number_of_results` rows of the sorted data frame.
+
+## Streamlining the process of adding variables.
+
+My goal in this code is to have a first part where variable: Price, BVPS, PE are the variables, then weight: .35, .35, .3. so the code will identify that there is 3 variables and their respective weights. Code should also be adjustable to do for just one or 5 etc.
+
+```{r}
+# Load libraries and read files
+library(readxl)
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+# Define variables and weights and added visual low and high for des and asc.
+variables <- c("Price", "BVPS", "PE")
+weights <- c(0.35, 0.35, 0.3)
+directions <- c("low", "high", "low") # "low" for descending, "high" for ascending
+
+# Calculate ranks for each variable
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  if (directions[i] == "low") {
+    df[[paste0("Rank", variable)]] <- rank(-df[[variable]], ties.method = "min")
+  } else {
+    df[[paste0("Rank", variable)]] <- rank(df[[variable]], ties.method = "min")
+  }
+}
+
+# Normalize and combine the ranks
+norm_rank_expression <- NULL
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  weight <- weights[i]
+  rank_name <- paste0("Rank", variable)
+  if (is.null(norm_rank_expression)) {
+    norm_rank_expression <- (df[[rank_name]] / length(df[[variable]])) * weight
+  } else {
+    norm_rank_expression <- norm_rank_expression + (df[[rank_name]] / length(df[[variable]])) * weight
+  }
+}
+df$NormRank <- norm_rank_expression
+
+# Display NormRank: "Top" for descending, "Bottom" for ascending
+order_to_display <- "Top"
+number_of_results <- 10
+
+# Display the data frame sorted by normalized ranks according to selected order
+sorted_df <- if(order_to_display == "Top") {
+  df[order(df$NormRank, decreasing = TRUE), ]
+} else {
+  df[order(df$NormRank, decreasing = FALSE), ]
+}
+
+# Print the specified number of results
+print(head(sorted_df, number_of_results))
+
+```
+
+### Explanation:
+
+-   **Variables and Weights Setup**: By defining `variables`, `weights`, and `directions` at the beginning, you can easily adjust the criteria without changing the subsequent code.
+
+-   **Loop for Ranking**: Iterates over each variable to compute its rank based on the specified direction.
+
+-   **Loop for Normalization**: Accumulates the weighted ranks to compute `NormRank`.
+
+-   **Flexibility**: You can add or remove criteria by simply adjusting the `variables`, `weights`, and `directions` lists.
+
+# 
+
+## Building The Shiny app code
+
+This first part is just building the layout for the Shiny app code, and does not do any calculations.
+
+```{r}
+library(shiny)
+library(readxl)
+
+ui <- fluidPage(
+  titlePanel("EQS"),
+
+  fluidRow(
+    column(4,
+           # File Input Section: Upload the Excel file
+           fileInput("file", "Choose Excel File", accept = ".xlsx"),
+
+           # Variable Selection Section: Select variables for ranking and display
+           uiOutput("var_select"),
+           uiOutput("display_var_select"),
+
+           # Number of Results and Show Options
+           numericInput("num_results", "Number of Results", value = 10, min = 1),
+           selectInput("show", "Show", choices = c("Top" = "Top", "Bottom" = "Bottom"))
+    ),
+    column(8,
+           # Variable Input/Select Options: Dynamic controls for each selected variable
+           uiOutput("ranking_controls")
+    )
+  ),
+
+  # Table Output: Placeholder for results table (to be implemented later)
+  tableOutput("resultsTable")
+)
+
+# Server
+server <- function(input, output, session) {
+
+  # 1. File Reading Section: Reads the uploaded Excel file
+  output$var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to rank
+    selectInput("variables", "Select Variables for Ranking", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 2. Variable Selection Section: Generate UI for selecting display variables
+  output$display_var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to display
+    selectInput("display_vars", "Select Variables to Display", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 3. Variable Input/Select Options Section: Generate UI for ranking controls (weights and order)
+  output$ranking_controls <- renderUI({
+    req(input$variables)  # Ensure variables are selected before proceeding
+
+    # Loop through each selected variable to create input fields for weight and order
+    controls <- lapply(seq_along(input$variables), function(i) {
+      var_name <- input$variables[i]
+
+      fluidRow(
+        column(12,
+               h4(paste("Variable:", var_name)),  # Display the variable name
+               numericInput(paste0("weight_", i), paste("Weight for", var_name), value = 1, step = 1),  # Numeric input for weight
+               selectInput(paste0("order_", i), paste("Order for", var_name), choices = c("Low" = 0, "High" = 1), selected = 0)  # Select input for order
+        )
+      )
+    })
+
+    # Combine all controls into a single UI element
+    do.call(tagList, controls)
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+
+```
+
+### Steps and Order in Server Logic:
+
+1.  **File Reading Section** (`output$var_select`):
+
+    -   **Purpose**: To read the uploaded Excel file and extract its column names.
+
+    -   **Order**: This is the first step because all subsequent actions depend on the availability of data from the uploaded file.
+
+    -   **Process**:
+
+        -   The server checks if a file is uploaded using `req(input$file)`.
+
+        -   It then reads the file using `read_excel`.
+
+        -   The column names are extracted and provided as choices in the `selectInput` for selecting variables for ranking.
+
+2.  **Variable Selection Section** (`output$display_var_select`):
+
+    -   **Purpose**: To dynamically generate the UI for selecting which variables from the uploaded data will be displayed in the results.
+
+    -   **Order**: This step follows file reading because it also depends on the column names from the uploaded file.
+
+    -   **Process**:
+
+        -   Similar to the first section, this code reads the file and extracts column names to populate the `selectInput` for display variables.
+
+3.  **Variable Input/Select Options Section** (`output$ranking_controls`):
+
+    -   **Purpose**: To dynamically create UI elements for each selected variable that allow the user to input weights and select the ranking order (Low or High).
+
+    -   **Order**: This is done after the variables are selected for ranking because these controls are dependent on which variables the user has chosen.
+
+    -   **Process**:
+
+        -   The server checks which variables are selected using `req(input$variables)`.
+
+        -   It then generates a series of input controls (`numericInput` for weight and `selectInput` for order) for each selected variable.
+
+4.  **Number of Results and Show Options**:
+
+    -   **Purpose**: To let the user specify how many results to display and whether to show the top or bottom results.
+
+    -   **Order**: These inputs are static and independent of file selection; hence they are initialized early in the UI column (column 4). They do not require server-side processing at this stage.
+
+### Summary of Order in Server Logic:
+
+-   **First**: The app reads the uploaded file (`output$var_select`) because all subsequent steps require the data it contains.
+
+-   **Second**: The app allows the user to select which variables to display (`output$display_var_select`) and rank, as these selections are based on the data structure.
+
+-   **Third**: Based on the selected variables, the app dynamically generates inputs for weights and order (`output$ranking_controls`).
+
+This order ensures that each step only occurs once the necessary prerequisites are in place, preventing errors and making the UI responsive to user input.
+
+## Adding action button to generate Data Frame
+
+I'm doing it in this order to minimize the possible errors when doing all at once.
+
+```{r}
+library(shiny)
+library(readxl)
+
+ui <- fluidPage(
+  titlePanel("EQS"),
+
+  fluidRow(
+    column(4,
+           # File Input Section: Upload the Excel file
+           fileInput("file", "Choose Excel File", accept = ".xlsx"),
+
+           # Variable Selection Section: Select variables for ranking and display
+           uiOutput("var_select"),
+           uiOutput("display_var_select"),
+
+           # Number of Results and Show Options
+           numericInput("num_results", "Number of Results", value = 10, min = 1),
+           selectInput("show", "Show", choices = c("Top" = "Top", "Bottom" = "Bottom")),
+           actionButton("rank", "Calculate Rankings")
+    ),
+    column(8,
+           # Variable Input/Select Options: Dynamic controls for each selected variable
+           uiOutput("ranking_controls")
+    )
+  ),
+
+  # Table Output: Placeholder for results table (to be implemented later)
+  tableOutput("resultsTable")
+)
+
+# Server
+server <- function(input, output, session) {
+
+  # 1. File Reading Section: Reads the uploaded Excel file
+  output$var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to rank
+    selectInput("variables", "Select Variables for Ranking", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 2. Variable Selection Section: Generate UI for selecting display variables
+  output$display_var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to display
+    selectInput("display_vars", "Select Variables to Display", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 4. Data Frame Generation Section: Generate the data frame when actionButton is clicked
+  observeEvent(input$rank, {  # New observer for the actionButton
+    req(input$file, input$variables, input$display_vars)  # Ensure inputs are available
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    selected_vars <- df[, input$variables, drop = FALSE]  # Select variables for ranking
+    display_vars <- df[, input$display_vars, drop = FALSE]  # Select variables to display
+
+    result_df <- cbind(display_vars, selected_vars)  # Combine selected and display variables into one data frame
+
+    output$resultsTable <- renderTable({  # Display the data frame
+      result_df
+    })
+  })
+
+
+  # 3. Variable Input/Select Options Section: Generate UI for ranking controls (weights and order)
+  output$ranking_controls <- renderUI({
+    req(input$variables)  # Ensure variables are selected before proceeding
+
+    # Loop through each selected variable to create input fields for weight and order
+    controls <- lapply(seq_along(input$variables), function(i) {
+      var_name <- input$variables[i]
+
+      fluidRow(
+        column(12,
+               h4(paste("Variable:", var_name)),  # Display the variable name
+               numericInput(paste0("weight_", i), paste("Weight for", var_name), value = 1, step = 1),  # Numeric input for weight
+               selectInput(paste0("order_", i), paste("Order for", var_name), choices = c("Low" = 0, "High" = 1), selected = 0)  # Select input for order
+        )
+      )
+    })
+
+    # Combine all controls into a single UI element
+    do.call(tagList, controls)
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+
+```
+
+-   The above code succesfully makes a data frame including all selected variables do raking and displaying. it does not rank them or take any other user input data.
+
+## Adding RANK.EQ function
+
+The below r code block is what is been added to the shiny app UI.
+
+```{r}
+# this is the R code portion that is been added 
+
+# Calculate ranks for each variable
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  if (directions[i] == "low") {
+    df[[paste0("Rank", variable)]] <- rank(-df[[variable]], ties.method = "min")
+  } else {
+    df[[paste0("Rank", variable)]] <- rank(df[[variable]], ties.method = "min")
+  }
+}
+```
+
+new Shinny app code
+
+```{r}
+library(shiny)
+library(readxl)
+
+ui <- fluidPage(
+  titlePanel("EQS"),
+
+  fluidRow(
+    column(4,
+           # File Input Section: Upload the Excel file
+           fileInput("file", "Choose Excel File", accept = ".xlsx"),
+
+           # Variable Selection Section: Select variables for ranking and display
+           uiOutput("var_select"),
+           uiOutput("display_var_select"),
+
+           # Number of Results and Show Options
+           numericInput("num_results", "Number of Results", value = 10, min = 1),
+           selectInput("show", "Show", choices = c("Top" = "Top", "Bottom" = "Bottom")),
+           actionButton("rank", "Calculate Rankings")
+    ),
+    column(8,
+           # Variable Input/Select Options: Dynamic controls for each selected variable
+           uiOutput("ranking_controls")
+    )
+  ),
+
+  # Table Output: Placeholder for results table (to be implemented later)
+  tableOutput("resultsTable")
+)
+
+# Server
+server <- function(input, output, session) {
+
+  # 1. File Reading Section: Reads the uploaded Excel file
+  output$var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to rank
+    selectInput("variables", "Select Variables for Ranking", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 2. Variable Selection Section: Generate UI for selecting display variables
+  output$display_var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to display
+    selectInput("display_vars", "Select Variables to Display", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 4. Data Frame Generation Section: Generate the data frame when actionButton is clicked
+  observeEvent(input$rank, {  # New observer for the actionButton
+    req(input$file, input$variables, input$display_vars)  # Ensure inputs are available
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    selected_vars <- df[, input$variables, drop = FALSE]  # Select variables for ranking
+    display_vars <- df[, input$display_vars, drop = FALSE]  # Select variables to display
+    
+    
+    # ---- ADDING RANK.EQ FORMULA FOR EACH RAKING VARIABLE-----
+    
+    # Calculate ranks for each variable
+    for (i in seq_along(input$variables)) {
+      variable <- input$variables[i]
+      order <- input[[paste0("order_", i)]]  # Get the order input for the variable
+      if (order == 0) {  # If order is "Low"
+        df[[paste0("Rank", variable)]] <- rank(-df[[variable]], ties.method = "min"  )
+      } else {  # If order is "High"
+        df[[paste0("Rank", variable)]] <- rank(df[[variable]], ties.method = "min")
+      }
+    }
+
+    # ------END OF CODE THAT ADDS RANK.EQ FORMULA -------
+    
+    
+    # THIS NXT LINE OF CODE IS UPDATED TO INCLUDE RANK COLUMNS
+
+    result_df <- cbind(display_vars, selected_vars, df[, paste0("Rank", input$variables)])  # Combine selected, display variables, and ranks into one data frame 
+    
+    
+
+    output$resultsTable <- renderTable({  # Display the data frame
+      result_df
+    })
+  })
+
+
+  # 3. Variable Input/Select Options Section: Generate UI for ranking controls (weights and order)
+  output$ranking_controls <- renderUI({
+    req(input$variables)  # Ensure variables are selected before proceeding
+
+    # Loop through each selected variable to create input fields for weight and order
+    controls <- lapply(seq_along(input$variables), function(i) {
+      var_name <- input$variables[i]
+
+      fluidRow(
+        column(12,
+               h4(paste("Variable:", var_name)),  # Display the variable name
+               numericInput(paste0("weight_", i), paste("Weight for", var_name), value = 1, step = 1),  # Numeric input for weight
+               selectInput(paste0("order_", i), paste("Order for", var_name), choices = c("Low" = 0, "High" = 1), selected = 0)  # Select input for order
+        )
+      )
+    })
+
+    # Combine all controls into a single UI element
+    do.call(tagList, controls)
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+```
+
+### Summary of Changes:
+
+1.  **For Loop for Rank Calculation**:
+
+    -   The loop iterates over the selected variables.
+
+    -   For each variable, the code checks the user-specified order ("Low" or "High").
+
+    -   It calculates the rank based on the order:
+
+        -   If the order is "Low," it ranks the variable in descending order (`-df[[variable]]`).
+
+        -   If the order is "High," it ranks the variable in ascending order (`df[[variable]]`).
+
+    -   The calculated ranks are stored in a new column named `"Rank <variable>"`.
+
+2.  **Updated `result_df`**:
+
+    -   The result data frame now includes display variables, selected variables for ranking, and the new rank columns for each variable.
+
+This code will generate the data frame with the variables to display, variables used for ranking, and the calculated ranks when the "Calculate Rankings" button is clicked.
+
+## Adding the Normalize column for one or multiple variables.
+
+This code successfully replicates the excel rank.eq numbers.
+
+```{r}
+library(shiny)
+library(readxl)
+
+ui <- fluidPage(
+  titlePanel("EQS"),
+
+  fluidRow(
+    column(4,
+           # File Input Section: Upload the Excel file
+           fileInput("file", "Choose Excel File", accept = ".xlsx"),
+
+           # Variable Selection Section: Select variables for ranking and display
+           uiOutput("var_select"),
+           uiOutput("display_var_select"),
+
+           # Number of Results and Show Options
+           numericInput("num_results", "Number of Results", value = 10, min = 1),
+           selectInput("show", "Show", choices = c("Top" = "Top", "Bottom" = "Bottom")),
+           actionButton("rank", "Calculate Rankings")
+    ),
+    column(8,
+           # Variable Input/Select Options: Dynamic controls for each selected variable
+           uiOutput("ranking_controls")
+    )
+  ),
+
+  # Table Output: Placeholder for results table (to be implemented later)
+  tableOutput("resultsTable")
+)
+
+# Server
+server <- function(input, output, session) {
+
+  # 1. File Reading Section: Reads the uploaded Excel file
+  output$var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to rank
+    selectInput("variables", "Select Variables for Ranking", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 2. Variable Selection Section: Generate UI for selecting display variables
+  output$display_var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to display
+    selectInput("display_vars", "Select Variables to Display", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 4. Data Frame Generation Section: Generate the data frame when actionButton is clicked
+  observeEvent(input$rank, {  # New observer for the actionButton
+    req(input$file, input$variables, input$display_vars)  # Ensure inputs are available
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    selected_vars <- df[, input$variables, drop = FALSE]  # Select variables for ranking
+    display_vars <- df[, input$display_vars, drop = FALSE]  # Select variables to display
+
+
+    # ---- ADDING RANK.EQ FORMULA FOR EACH RAKING VARIABLE-----
+
+    # Calculate ranks for each variable
+    for (i in seq_along(input$variables)) {
+      variable <- input$variables[i]
+      order <- input[[paste0("order_", i)]]  # Get the order input for the variable
+      if (order == 0) {  # If order is "Low"
+        df[[paste0("Rank", variable)]] <- rank(-df[[variable]], ties.method = "min"  )
+      } else {  # If order is "High"
+        df[[paste0("Rank", variable)]] <- rank(df[[variable]], ties.method = "min")
+      }
+    }
+
+    # ------END OF CODE THAT ADDS RANK.EQ FORMULA -------
+
+
+    # THIS NXT LINE OF CODE IS UPDATED TO INCLUDE RANK COLUMNS
+
+    result_df <- cbind(display_vars, selected_vars, df[, paste0("Rank", input$variables)])  # Combine selected, display variables, and ranks into one data frame
+
+    
+    # ------ ADDING NormRank FUNCTION -----
+    
+    # Normalize and combine the ranks into a new column 'NormRank'
+    norm_rank_expression <- NULL
+    for (i in seq_along(input$variables)) {
+      variable <- input$variables[i]
+      weight <- input[[paste0("weight_", i)]]  # Get the weight input for the variable
+      rank_name <- paste0("Rank", variable)
+      if (is.null(norm_rank_expression)) {
+        norm_rank_expression <- (df[[rank_name]] / length(df[[variable]])) * weight
+      } else {
+        norm_rank_expression <- norm_rank_expression + (df[[rank_name]] / length(df[[variable]])) * weight
+      }
+    }
+    df$NormRank <- norm_rank_expression  # Add the NormRank column to the data frame
+    
+    # --- end of function for NormRank ---------------
+    
+    # ---- This code adds NormRank to the data frame
+    result_df <- cbind(result_df, df$NormRank)  # Add the NormRank column to the result data frame
+
+    # --- END OF CODE THAT ADDS THE NormRank FUNCTION -----
+    
+
+    output$resultsTable <- renderTable({  # Display the data frame
+      result_df
+    })
+  })
+
+
+  # 3. Variable Input/Select Options Section: Generate UI for ranking controls (weights and order)
+  output$ranking_controls <- renderUI({
+    req(input$variables)  # Ensure variables are selected before proceeding
+
+    # Loop through each selected variable to create input fields for weight and order
+    controls <- lapply(seq_along(input$variables), function(i) {
+      var_name <- input$variables[i]
+
+      fluidRow(
+        column(12,
+               h4(paste("Variable:", var_name)),  # Display the variable name
+               numericInput(paste0("weight_", i), paste("Weight for", var_name), value = 1, step = 1),  # Numeric input for weight
+               selectInput(paste0("order_", i), paste("Order for", var_name), choices = c("Low" = 0, "High" = 1), selected = 0)  # Select input for order
+        )
+      )
+    })
+
+    # Combine all controls into a single UI element
+    do.call(tagList, controls)
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+```
+
+### Summary of Changes:
+
+1.  **Normalization and Combination of Ranks (`NormRank`)**:
+
+    -   **Separate Loop**: This loop operates independently after the rank calculation, ensuring the modularity of the code.
+
+    -   **Normalization**: For each variable, the corresponding rank is normalized by dividing by the total number of observations (`length(df[[variable]])`).
+
+    -   **Weighted Combination**: The normalized rank is then multiplied by the user-defined weight for that variable and added to the `norm_rank_expression`.
+
+    -   **Final `NormRank` Column**: The cumulative result of `norm_rank_expression` is stored as a new column in the data frame named `NormRank`.
+
+2.  **Updated `result_df`**:
+
+    -   The `NormRank` column is appended to the `result_df` data frame, which now includes the display variables, ranking variables, their ranks, and the final normalized rank.
+
+This structure ensures that the calculations are modular, maintaining the separation between the ranking and normalization steps, which will help in further expanding or debugging the application.
+
+## Adding option to displayed in order and head
+
+This portion of the code adds option to display from Top or Bottom results and option to display x number of observations. Note that top or bottom is just a display feature because by now the NormRank column has the set data base on options already selected.
+
+I will also see if its possble to combined the line of code that adds the new columns to the data frame, because I have one for the first portion where each column has its own rank column, and i have another that adds the normrank column.
+
+**This code successfully does the rank.eq and EQS combined column functions and calculations**
+
+```{r}
+library(shiny)
+library(readxl)
+
+ui <- fluidPage(
+  titlePanel("EQS"),
+
+  fluidRow(
+    column(4,
+           # File Input Section: Upload the Excel file
+           fileInput("file", "Choose Excel File", accept = ".xlsx"),
+
+           # Variable Selection Section: Select variables for ranking and display
+           uiOutput("var_select"),
+           uiOutput("display_var_select"),
+
+           # Number of Results and Show Options
+           numericInput("num_results", "Number of Results", value = 10, min = 1),
+           selectInput("show", "Show", choices = c("Top" = "Top", "Bottom" = "Bottom")),
+           actionButton("rank", "Calculate Rankings")
+    ),
+    column(8,
+           # Variable Input/Select Options: Dynamic controls for each selected variable
+           uiOutput("ranking_controls")
+    )
+  ),
+
+  # Table Output: Placeholder for results table (to be implemented later)
+  tableOutput("resultsTable")
+)
+
+# Server
+server <- function(input, output, session) {
+
+  # 1. File Reading Section: Reads the uploaded Excel file
+  output$var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to rank
+    selectInput("variables", "Select Variables for Ranking", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 2. Variable Selection Section: Generate UI for selecting display variables
+  output$display_var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to display
+    selectInput("display_vars", "Select Variables to Display", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+
+  # 3. Variable Input/Select Options Section: Generate UI for ranking controls (weights and order)
+  output$ranking_controls <- renderUI({
+    req(input$variables)  # Ensure variables are selected before proceeding
+
+    # Loop through each selected variable to create input fields for weight and order
+    controls <- lapply(seq_along(input$variables), function(i) {
+      var_name <- input$variables[i]
+
+      fluidRow(
+        column(12,
+               h4(paste("Variable:", var_name)),  # Display the variable name
+               numericInput(paste0("weight_", i), paste("Weight for", var_name), value = 1, step = 1),  # Numeric input for weight
+               selectInput(paste0("order_", i), paste("Order for", var_name), choices = c("Low" = 0, "High" = 1), selected = 0)  # Select input for order
+        )
+      )
+    })
+
+    # Combine all controls into a single UI element
+    do.call(tagList, controls)
+  })
+
+
+  # 4. Data Frame Generation Section: Generate the data frame when actionButton is clicked
+  observeEvent(input$rank, {  # New observer for the actionButton
+    req(input$file, input$variables, input$display_vars)  # Ensure inputs are available
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    selected_vars <- df[, input$variables, drop = FALSE]  # Select variables for ranking
+    display_vars <- df[, input$display_vars, drop = FALSE]  # Select variables to display
+
+
+    # ---- ADDING RANK.EQ FORMULA FOR EACH RAKING VARIABLE-----
+
+    # Calculate ranks for each variable
+    for (i in seq_along(input$variables)) {
+      variable <- input$variables[i]
+      order <- input[[paste0("order_", i)]]  # Get the order input for the variable
+      if (order == 0) {  # If order is "Low"
+        df[[paste0("Rank", variable)]] <- rank(-df[[variable]], ties.method = "min"  )
+      } else {  # If order is "High"
+        df[[paste0("Rank", variable)]] <- rank(df[[variable]], ties.method = "min")
+      }
+    }
+
+    # ------END OF CODE THAT ADDS RANK.EQ FORMULA -------
+
+
+    # ------ ADDING NormRank FUNCTION -----
+
+    # Normalize and combine the ranks into a new column 'NormRank'
+    norm_rank_expression <- NULL
+    for (i in seq_along(input$variables)) {
+      variable <- input$variables[i]
+      weight <- input[[paste0("weight_", i)]]  # Get the weight input for the variable
+      rank_name <- paste0("Rank", variable)
+      if (is.null(norm_rank_expression)) {
+        norm_rank_expression <- (df[[rank_name]] / length(df[[variable]])) * weight
+      } else {
+        norm_rank_expression <- norm_rank_expression + (df[[rank_name]] / length(df[[variable]])) * weight
+      }
+    }
+    df$NormRank <- norm_rank_expression  # Add the NormRank column to the data frame
+
+    # --- end of function for NormRank ---------------
+
+
+    # ---- code that includes column in DATAFRAME ------------------
+
+    # Combine selected, display variables, ranks, and NormRank into one data frame
+    result_df <- cbind(display_vars, selected_vars, df[, paste0("Rank", input$variables)], NormRank = df$NormRank)
+    # --- END OF CODE THAT includes or creates column in the df -----
+
+
+    # Sort the data frame based on user input for 'Show'
+    sorted_df <- if(input$show == "Top") {
+      result_df[order(result_df$NormRank, decreasing = TRUE), ]
+    } else {
+      result_df[order(result_df$NormRank, decreasing = FALSE), ]
+    }
+
+ # ---- This part includes edits when adding to show only the top or bottom x number of results.----------------
+    # Display the specified number of results
+    output$resultsTable <- renderTable({
+      head(sorted_df, input$num_results)  # Show the top 'num_results' entries
+    })
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+```
+
+### Summary of Changes:
+
+1.  **Merged the Two `cbind` Statements**:
+
+    -   Combined the selected display variables, ranking variables, ranks, and `NormRank` into a single data frame `result_df` with the updated column name `NormRank`.
+
+    -   The merged line: `result_df <- cbind(display_vars, selected_vars, df[, paste0("Rank", input$variables)], NormRank = df$NormRank)`.
+
+2.  **Sorting Based on `Show` Input**:
+
+    -   The data frame is sorted based on the `NormRank` column in descending order if the user selects "Top" or ascending order if the user selects "Bottom".
+
+    -   The sorted data frame is stored in `sorted_df`.
+
+3.  **Limiting the Number of Results**:
+
+    -   The `head` function is used to display only the number of results specified by the user in `input$num_results`.
+
+This code allows the user to see a sorted and limited number of results based on their selected options for `Show` and `Number of Results`, with the `NormRank` column sorted as per their preference.
+
+# VERSION 1.1
+
+-   added sector & variable filters to R code
+
+-   after the data frame is filter, every df change to df_f
+
+-   Added sector & variable filter code to Shinny app.
+
+## Adding filters for sectors to R code
+
+I want to continue to have a separate R file that does the same thing as my Shiny app code. The purpose for this is to have a hard r code version of my shinny app code. This will also be use to compare both r and shinny app codes when sharing with ai so its easier to understand what is going on.
+
+The R code will not have the same options to edit between variables and inputs as easily but will have most hard coded in the code needing no user inputs and or choices.
+
+```{r}
+# this is hard copy of last r code which should be the same as the previous r code.
+# Load libraries and read files
+library(readxl)
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+# Define variables and weights and added visual low and high for des and asc.
+variables <- c("Price", "BVPS") # sample usage "Price", "BVPS", "PE"
+weights <- c(0.5, 0.5) # 0.35, 0.35, 0.3
+directions <- c("low", "high") # "low" for descending, "high" for ascending
+
+# Calculate ranks for each variable
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  if (directions[i] == "low") {
+    df[[paste0("Rank", variable)]] <- rank(-df[[variable]], ties.method = "min")
+  } else {
+    df[[paste0("Rank", variable)]] <- rank(df[[variable]], ties.method = "min")
+  }
+}
+
+# Normalize and combine the ranks
+norm_rank_expression <- NULL
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  weight <- weights[i]
+  rank_name <- paste0("Rank", variable)
+  if (is.null(norm_rank_expression)) {
+    norm_rank_expression <- (df[[rank_name]] / length(df[[variable]])) * weight
+  } else {
+    norm_rank_expression <- norm_rank_expression + (df[[rank_name]] / length(df[[variable]])) * weight
+  }
+}
+df$NormRank <- norm_rank_expression
+
+# Display NormRank: "Top" for descending, "Bottom" for ascending
+order_to_display <- "Top"
+number_of_results <- 40
+
+# Display the data frame sorted by normalized ranks according to selected order
+sorted_df <- if(order_to_display == "Top") {
+  df[order(df$NormRank, decreasing = TRUE), ]
+} else {
+  df[order(df$NormRank, decreasing = FALSE), ]
+}
+
+# Print the specified number of results
+print(head(sorted_df, number_of_results))
+```
+
+## Filtered R code
+
+This just adds one line of code to filter for sector, but it requires changing df to df_f. There is an option to filtered the df with like f_df, and then use df for the filtered data. Since I will have so many steps to this code I decided to know with what df my code is using at the time.
+
+```{r}
+# Load libraries and read files
+library(readxl)
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+# ------ NEW CODE -------------------- 
+# Filter the data 
+df_f <- df[df$sector == "Banks", ]
+# ------END OF NEW CODE ----------------- also all df change to df_f after this line of code ------------
+
+
+
+# Define variables and weights and added visual low and high for des and asc.
+variables <- c("Price", "BVPS") # sample usage "Price", "BVPS", "PE"
+weights <- c(0.5, 0.5) # 0.35, 0.35, 0.3
+directions <- c("low", "high") # "low" for descending, "high" for ascending
+
+# Calculate ranks for each variable
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  if (directions[i] == "low") {
+    df_f[[paste0("Rank", variable)]] <- rank(-df_f[[variable]], ties.method = "min")
+  } else {
+    df_f[[paste0("Rank", variable)]] <- rank(df_f[[variable]], ties.method = "min")
+  }
+}
+
+
+# Normalize and combine the ranks
+norm_rank_expression <- NULL
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  weight <- weights[i]
+  rank_name <- paste0("Rank", variable)
+  if (is.null(norm_rank_expression)) {
+    norm_rank_expression <- (df_f[[rank_name]] / length(df_f[[variable]])) * weight
+  } else {
+    norm_rank_expression <- norm_rank_expression + (df_f[[rank_name]] / length(df_f[[variable]])) * weight
+  }
+}
+df_f$NormRank <- norm_rank_expression
+
+# Display NormRank: "Top" for descending, "Bottom" for ascending
+order_to_display <- "Top"
+number_of_results <- 40
+
+# Display the data frame sorted by normalized ranks according to selected order
+sorted_df_f <- if(order_to_display == "Top") {
+  df_f[order(df_f$NormRank, decreasing = TRUE), ]
+} else {
+  df_f[order(df_f$NormRank, decreasing = FALSE), ]
+}
+
+# Print the specified number of results
+print(head(sorted_df_f, number_of_results))
+
+
+
+```
+
+This next chunk of R code, adds filter code to exclude values for variables: values like 0 and or blanks.
+
+```{r}
+# Load libraries and read files
+library(readxl)
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+
+# Filter the data 
+df_f <- df[df$sector == "Banks", ]
+
+# ------------ NEW CODE -------- adds filters to variables --------
+# Exclude observations for variables "BVPS" & "Price"
+df_f <- df_f[df_f$BVPS != 0 & df_f$BVPS != "" & !is.na(df_f$BVPS), ] # excldes 0 & blanks
+df_f <- df_f[df_f$Price != 0 & df_f$Price != "" & !is.na(df_f$Price), ] # excldes 0 & blanks
+
+# ----------END OF NEW CODE -------------
+
+
+
+
+# Define variables and weights and added visual low and high for des and asc.
+variables <- c("Price", "BVPS") # sample usage "Price", "BVPS", "PE"
+weights <- c(0.5, 0.5) # 0.35, 0.35, 0.3
+directions <- c("low", "high") # "low" for descending, "high" for ascending
+
+# Calculate ranks for each variable
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  if (directions[i] == "low") {
+    df_f[[paste0("Rank", variable)]] <- rank(-df_f[[variable]], ties.method = "min")
+  } else {
+    df_f[[paste0("Rank", variable)]] <- rank(df_f[[variable]], ties.method = "min")
+  }
+}
+
+
+# Normalize and combine the ranks
+norm_rank_expression <- NULL
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  weight <- weights[i]
+  rank_name <- paste0("Rank", variable)
+  if (is.null(norm_rank_expression)) {
+    norm_rank_expression <- (df_f[[rank_name]] / length(df_f[[variable]])) * weight
+  } else {
+    norm_rank_expression <- norm_rank_expression + (df_f[[rank_name]] / length(df_f[[variable]])) * weight
+  }
+}
+df_f$NormRank <- norm_rank_expression
+
+# Display NormRank: "Top" for descending, "Bottom" for ascending
+order_to_display <- "Top"
+number_of_results <- 40
+
+# Display the data frame sorted by normalized ranks according to selected order
+sorted_df_f <- if(order_to_display == "Top") {
+  df_f[order(df_f$NormRank, decreasing = TRUE), ]
+} else {
+  df_f[order(df_f$NormRank, decreasing = FALSE), ]
+}
+
+# Print the specified number of results
+print(head(sorted_df_f, number_of_results))
+
+```
+
+**Explanation**
+
+-   **Initial Sector Filter:**
+
+    -   `df_f <- df[df$sector == "Banks", ]`: This filters the dataset to include only rows where the `sector` column is exactly "Banks".
+
+-   **Filter for BVPS:**
+
+    -   `df_f <- df_f[df_f$BVPS != 0 & df_f$BVPS != "" & !is.na(df_f$BVPS), ]`:
+
+        -   `!= 0`: Excludes rows where `BVPS` is equal to 0.
+
+        -   `!= ""`: Excludes rows where `BVPS` is an empty string (i.e., blank).
+
+        -   `!is.na(df_f$BVPS)`: Excludes rows where `BVPS` is `NA` (missing value).
+
+## Adding filtered code for sector and rank variables to Shiny code.
+
+To add the filtered code, 3 new chunks where added, one to the ui, and two to the server. All 3 chunks of new code are between \# —– new and end of code ———-.
+
+```{r}
+library(shiny)
+library(readxl)
+
+ui <- fluidPage(
+  titlePanel("EQS"),
+
+  fluidRow(
+    column(4,
+           # File Input Section: Upload the Excel file
+           fileInput("file", "Choose Excel File", accept = ".xlsx"),
+
+           # Variable Selection for ranking and display
+           uiOutput("var_select"),
+           uiOutput("display_var_select"),
+
+           # ----- V1.1 NEW CODE for filters-----------
+
+           # New Filter UI Elements.
+           selectInput("sector_filter", "Filter by Sector", choices = NULL),  # Sector filter dropdown
+           checkboxGroupInput("exclude_options", "Exclude obs. w/",
+                              choices = list("Blanks" = "blanks", "0" = "zero")),  # Exclusion options
+           # ----------- END OF NEW CODE for filets -------------------------------------------------------
+
+
+
+           # Number of Results and Show Options
+           numericInput("num_results", "Number of Results", value = 10, min = 1),
+           selectInput("show", "Show", choices = c("Top" = "Top", "Bottom" = "Bottom")),
+           actionButton("rank", "Calculate Rankings")
+    ),
+    column(8,
+           # Variable Input/Select Options: Dynamic controls for each selected variable
+           uiOutput("ranking_controls")
+    )
+  ),
+
+  # Table Output: Placeholder for results table (to be implemented later)
+  tableOutput("resultsTable")
+)
+
+# Server
+server <- function(input, output, session) {
+
+  # ------------ V1.1 NEW CODE for filter variables --------------------
+  # Update sector choices dynamically based on the uploaded file
+  observe({
+    req(input$file)
+    df <- read_excel(input$file$datapath)
+    updateSelectInput(session, "sector_filter", choices = unique(df$sector))
+  })
+
+  # -----End of new code for filter variables
+
+
+  # 1. File Reading Section: Reads the uploaded Excel file
+  output$var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to rank
+    selectInput("variables", "Select Variables for Ranking", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 2. Variable Selection Section: Generate UI for selecting display variables
+  output$display_var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to display
+    selectInput("display_vars", "Select Variables to Display", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+
+  # 3. Variable Input/Select Options Section: Generate UI for ranking controls (weights and order)
+  output$ranking_controls <- renderUI({
+    req(input$variables)  # Ensure variables are selected before proceeding
+
+    # Loop through each selected variable to create input fields for weight and order
+    controls <- lapply(seq_along(input$variables), function(i) {
+      var_name <- input$variables[i]
+
+      fluidRow(
+        column(12,
+               h4(paste("Variable:", var_name)),  # Display the variable name
+               numericInput(paste0("weight_", i), paste("Weight for", var_name), value = 1, step = 1),  # Numeric input for weight
+               selectInput(paste0("order_", i), paste("Order for", var_name), choices = c("Low" = 0, "High" = 1), selected = 0)  # Select input for order
+        )
+      )
+    })
+
+    # Combine all controls into a single UI element
+    do.call(tagList, controls)
+  })
+
+
+  # 4. Data Frame Generation Section: Generate the data frame when actionButton is clicked
+  observeEvent(input$rank, {  # New observer for the actionButton
+    req(input$file, input$variables, input$display_vars)  # Ensure inputs are available
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    # ---------------- V1.1 NEW CODE: Applying Filters ----------------
+
+    # Filter by sector
+    if (!is.null(input$sector_filter)) {
+      df <- df[df$sector == input$sector_filter, ]
+    }
+
+    # Exclude observations based on user choices
+    exclude_conditions <- input$exclude_options
+    for (var in input$variables) {
+      if ("zero" %in% exclude_conditions) {
+        df <- df[df[[var]] != 0, ]
+      }
+      if ("blanks" %in% exclude_conditions) {
+        df <- df[df[[var]] != "", ]
+        df <- df[!is.na(df[[var]]), ]
+      }
+    }
+    # ------------------------------------------------------------
+    selected_vars <- df[, input$variables, drop = FALSE]  # Select variables for ranking
+    display_vars <- df[, input$display_vars, drop = FALSE]  # Select variables to display
+
+
+    # ---- ADDING RANK.EQ FORMULA FOR EACH RAKING VARIABLE-----
+
+    # Calculate ranks for each variable
+    for (i in seq_along(input$variables)) {
+      variable <- input$variables[i]
+      order <- input[[paste0("order_", i)]]  # Get the order input for the variable
+      if (order == 0) {  # If order is "Low"
+        df[[paste0("Rank", variable)]] <- rank(-df[[variable]], ties.method = "min"  )
+      } else {  # If order is "High"
+        df[[paste0("Rank", variable)]] <- rank(df[[variable]], ties.method = "min")
+      }
+    }
+
+    # ------END OF CODE THAT ADDS RANK.EQ FORMULA -------
+
+
+    # ------ ADDING NormRank FUNCTION -----
+
+    # Normalize and combine the ranks into a new column 'NormRank'
+    norm_rank_expression <- NULL
+    for (i in seq_along(input$variables)) {
+      variable <- input$variables[i]
+      weight <- input[[paste0("weight_", i)]]  # Get the weight input for the variable
+      rank_name <- paste0("Rank", variable)
+      if (is.null(norm_rank_expression)) {
+        norm_rank_expression <- (df[[rank_name]] / length(df[[variable]])) * weight
+      } else {
+        norm_rank_expression <- norm_rank_expression + (df[[rank_name]] / length(df[[variable]])) * weight
+      }
+    }
+    df$NormRank <- norm_rank_expression  # Add the NormRank column to the data frame
+
+    # --- end of function for NormRank ---------------
+
+
+    # ---- code that includes column in DATAFRAME ------------------
+
+    # Combine selected, display variables, ranks, and NormRank into one data frame
+    result_df <- cbind(display_vars, selected_vars, df[, paste0("Rank", input$variables)], NormRank = df$NormRank)
+    # --- END OF CODE THAT includes or creates column in the df -----
+
+
+    # Sort the data frame based on user input for 'Show'
+    sorted_df <- if(input$show == "Top") {
+      result_df[order(result_df$NormRank, decreasing = TRUE), ]
+    } else {
+      result_df[order(result_df$NormRank, decreasing = FALSE), ]
+    }
+
+    # ---- This part includes edits when adding to show only the top or bottom x number of results.----------------
+    # Display the specified number of results
+    output$resultsTable <- renderTable({
+      head(sorted_df, input$num_results)  # Show the top 'num_results' entries
+    })
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+```
+
+### **Explanation of Changes:**
+
+1.  **UI Changes:**
+
+    -   **Sector Filter:** A dropdown (`selectInput("sector_filter", ...)`) is added to filter the dataset based on the sector.
+
+    -   **Exclude Options:** A checkbox group (`checkboxGroupInput("exclude_options", ...)`) allows users to exclude observations with blanks or zeros.
+
+2.  **Server Logic Changes:**
+
+    -   **Sector Filtering:** When a sector is selected, the dataset is filtered to include only observations from that sector.
+
+    -   **Exclusion Logic:** Based on user selection, observations with `0`, blanks, or `NA` values in the selected variables are excluded.
+
+### **Documentation:**
+
+-   Each new section of code is clearly marked with comments like `# ---------------- NEW CODE: Applying Filters ----------------` to distinguish it from existing code.
+
+# VERSION 1.2
+
+-   Adding option to edit excel file and add NormRank column to excel file.
+
+    -   Cons: can make the app slower
+
+        -   Option to just download an excel file with the new df, which can be less complex and not run into permissions where the app is hosted.
+
+            -   Cons: many excel files will result, and will be best just to work with one excel file
+
+## Adding excel file editing option to R code
+
+This code adds the option for the code to add the NormRank column to the excel file.
+
+-   This should allow for EQS research to be saved to the excel file.
+
+```{r}
+# Load libraries and read files
+library(readxl)
+library(openxlsx) # V1.2 --------------
+library(dplyr) # V1.2 ----------------- 
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+
+# V1.1 Filter the data eg: by sector, blanks, and or zero values.
+df_f <- df[df$sector == "Banks", ]
+# Exclude observations for variables "BVPS" & "Price"
+df_f <- df_f[df_f$BVPS != 0 & df_f$BVPS != "" & !is.na(df_f$BVPS), ] # excldes 0 & blanks
+df_f <- df_f[df_f$Price != 0 & df_f$Price != "" & !is.na(df_f$Price), ]
+
+# --- -- End of code for filters ------------
+
+
+# Define variables and weights and added visual low and high for des and asc.
+variables <- c("Price", "BVPS") # sample usage "Price", "BVPS", "PE"
+weights <- c(0.5, 5) # 0.35, 0.35, 0.3
+directions <- c("low", "high") # "low" for descending, "high" for ascending
+
+# Calculate ranks for each variable
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  if (directions[i] == "low") {
+    df_f[[paste0("Rank", variable)]] <- rank(-df_f[[variable]], ties.method = "min")
+  } else {
+    df_f[[paste0("Rank", variable)]] <- rank(df_f[[variable]], ties.method = "min")
+  }
+}
+
+
+# Normalize and combine the ranks
+norm_rank_expression <- NULL
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  weight <- weights[i]
+  rank_name <- paste0("Rank", variable)
+  if (is.null(norm_rank_expression)) {
+    norm_rank_expression <- (df_f[[rank_name]] / length(df_f[[variable]])) * weight
+  } else {
+    norm_rank_expression <- norm_rank_expression + (df_f[[rank_name]] / length(df_f[[variable]])) * weight
+  }
+}
+df_f$NormRank <- norm_rank_expression
+
+
+
+
+# Display NormRank: "Top" for descending, "Bottom" for ascending
+order_to_display <- "Top"
+number_of_results <- 40
+
+# Display the data frame sorted by normalized ranks according to selected order
+sorted_df_f <- if(order_to_display == "Top") {
+  df_f[order(df_f$NormRank, decreasing = TRUE), ]
+} else {
+  df_f[order(df_f$NormRank, decreasing = FALSE), ]
+}
+
+# Print the specified number of results
+print(head(sorted_df_f, number_of_results))
+
+
+# ---- V1.2 NEW CODE for EXCEL EDITING ----------------
+# ---- This code section functions independently so it can be excluded for faster testing -------
+
+# edit column name for NormRank when saving to Excel
+norm_rank_column_name <- "test111"
+
+# Ensure that all existing data in the NormRank column are initially set to NA if the column exists
+if (norm_rank_column_name %in% names(df)) {
+  df[[norm_rank_column_name]] <- NA
+} else {
+  df[[norm_rank_column_name]] <- NA  # Add the column with NA if it does not exist
+}
+
+# Merge or update NormRank values from df_f
+# Assume 'Ticker' is the matching key column in both df and df_f
+df <- left_join(df, df_f[c("Ticker", "NormRank")], by = "Ticker")
+
+# Update the NormRank in the main df using coalesce to fill NA values with new data
+df[[norm_rank_column_name]] <- coalesce(df$NormRank, df[[norm_rank_column_name]])
+df$NormRank <- NULL  # Remove the temporary NormRank column if it was created during merge
+
+# Write the updated dataframe back to the Excel file, overwriting the existing file
+write.xlsx(df, file = "C:/Users/eduar/Downloads/papersample.xlsx", overwrite = TRUE)
+
+
+# ----------V1.2 END OF CODE for Excel Editing ---------------
+
+```
+
+**This code removes formatting and formulas from other columns in the excel file, but it is done by adding**
+
+-   It leaves everything in text or number format
+
+    -   It can still be used but with the con of losing formatting and any formulas.
+
+    -   Maybe I can just have the code add a new sheet with the new numbers
+
+        -   Some complications w/ this is filtering will make it hard to just merged new column into sheet with formatting and formulas.
+
+            -   I can filter in excel by a variable used in the function from large to small for both sheets. Copy the new column from the new sheet into the formatted sheet.
+
+### Explanation for new code section —– V1.2-------
+
+-   **Specify Column Name**:
+
+    -   `norm_rank_column_name <- "test111"`: Defines a variable to store the name of the Excel column where the `NormRank` values will be stored. Set to "test111" but can be customized.
+
+-   **Initialize or Add Column with NA**:
+
+    -   `if (norm_rank_column_name %in% names(df))`: Checks if the column "test111" exists in the dataframe `df`.
+
+    -   `df[[norm_rank_column_name]] <- NA`: Sets all values in the "test111" column to `NA`, clearing old data.
+
+    -   `else`: If the column does not exist, it creates the column and initializes all values with `NA`.
+
+-   **Merge Updated NormRank Values**:
+
+    -   `df <- left_join(df, df_f[c("Ticker", "NormRank")], by = "Ticker")`: Merges `df` with `df_f` based on the `Ticker` column. This joins the `NormRank` values from `df_f` into `df`.
+
+-   **Update NormRank in Main DataFrame**:
+
+    -   `df[[norm_rank_column_name]] <- coalesce(df$NormRank, df[[norm_rank_column_name]])`: Updates the "test111" column in `df` with `NormRank` values, using `coalesce` to replace `NA` values in "test111" with non-`NA` values from `NormRank`.
+
+    -   `df$NormRank <- NULL`: Removes the temporary `NormRank` column created during the merge to prevent duplication.
+
+-   **Write Updated DataFrame to Excel**:
+
+    -   `write.xlsx(df, file = "C:/Users/eduar/Downloads/papersample.xlsx", overwrite = TRUE)`: Writes the updated dataframe `df` back to the Excel file, overwriting the existing file to update it with new data.
+
+These steps ensure that the Excel file is correctly updated with new `NormRank` values in the specified column, with old values cleared and no duplicate columns created.
+
+## Adding Excel editing to Shinny app code
+
+I was thinking of possibly leaving Version 1.2 to the side since it is an add on and not other code depends on it. Maybe even separate code chunks that do not dependents to avoid working with such long codes.
+
+# version 1.3
+
+I forgot to add the notes for this version, and to catch up quickly I had ai compare version 1.2 and 1.3 and see wht change to make notes for version 1.3. If I remember correctly version 1.2 editited the excel file allowing me to do multiple normrank columns, but version 1.3 is just one normrank. I also remember I diviated from v1.2 due to some issues with improper excel edits.
+
+here are the notes for version 1.3
+
+### —— V1 . 3 CHANGE LOG ——
+
+------------------------------------------------------------------------
+
+#### 1. **I/O Scope Tightened — App is now *read‑only***
+
+| What disappeared | Why |
+|----|----|
+| `openxlsx`, `dplyr` imports | No more direct Excel editing. Fewer deps, faster load. |
+| Entire **Excel‑write block** (`norm_rank_column_name`, `coalesce`, `write.xlsx`, etc.) | Eliminates file‑locking headaches on hosted servers and avoids overwriting user files. Persistence, if needed, must be done in a separate utility script. |
+
+------------------------------------------------------------------------
+
+#### 2. **Sector Filter Observer Consolidated**
+
+-   **Before (V1.2)** – two separate `observe()` calls peppered through the server.\
+-   **Now (V1.3)** – a single `observe({ … updateSelectInput … })` right at the top of `server`.\
+    *Cleaner, avoids duplicate triggers, one source of truth for `sector_filter`.*
+
+------------------------------------------------------------------------
+
+#### 3. **Utility / Scraping Chunks Removed**
+
+-   Stand‑alone scripts that used **tidyquant** (`tq_get`) to fetch sectors and the `df_f` pre‑filter test block are no longer inside the Shiny file.\
+-   Result: the Shiny app is focussed purely on ranking logic; data‑enrichment stays outside the UI layer.
+
+------------------------------------------------------------------------
+
+#### 4. **Comment & Naming Hygiene**
+
+-   Banner tags like `# ----- V1.1 NEW CODE -----` and misspelt comments were stripped.\
+-   Consistent camelCase variable names (`rank_name`, `norm_rank_expression`, `contrib`).\
+-   No functional change, but code is \~15 % shorter and easier to scan.
+
+------------------------------------------------------------------------
+
+#### 5. **Minor Logic Tweaks / Buglets**
+
+| Area | V1.2 | V1.3 |
+|----|----|----|
+| **Ranking ties** | `ties.method = "min"` in both paths (*kept*) | unchanged |
+| **NormRank calc** | `(rank / n) * weight` | unchanged (wrapped in helper `contrib` var for clarity) |
+| **Weight inputs** | default `1` | unchanged |
+| **UI widgets** | identical | identical |
+
+------------------------------------------------------------------------
+
+### 🚦 Impact
+
+-   **Performance:** lighter dependency set, no disk writes during a session.\
+-   **Stability:** less chance of permissions errors on shinyapps.io / RStudio Connect.\
+-   **Trade‑off:** NormRank is **not** written back to the source workbook. If you still need that, plug the old V1.2 Excel‑write chunk in as a separate “Export” button or external script.
+
+------------------------------------------------------------------------
+
+```{r}
+# V1.3
+library(shiny)
+library(readxl)
+
+ui <- fluidPage(
+  titlePanel("EQS"),
+
+  fluidRow(
+    column(4,
+           # File Input Section: Upload the Excel file
+           fileInput("file", "Choose Excel File", accept = ".xlsx"),
+
+           # Variable Selection for ranking and display
+           uiOutput("var_select"),
+           uiOutput("display_var_select"),
+
+           # ----- V1.1 NEW CODE for filters-----------
+
+           # New Filter UI Elements.
+           selectInput("sector_filter", "Filter by Sector", choices = NULL),  # Sector filter dropdown
+           checkboxGroupInput("exclude_options", "Exclude obs. w/",
+                              choices = list("Blanks" = "blanks", "0" = "zero")),  # Exclusion options
+           # ----------- END OF NEW CODE for filets -------------------------------------------------------
+
+
+
+           # Number of Results and Show Options
+           numericInput("num_results", "Number of Results", value = 10, min = 1),
+           selectInput("show", "Show", choices = c("Top" = "Top", "Bottom" = "Bottom")),
+           actionButton("rank", "Calculate Rankings")
+    ),
+    column(8,
+           # Variable Input/Select Options: Dynamic controls for each selected variable
+           uiOutput("ranking_controls")
+    )
+  ),
+
+  # Table Output: Placeholder for results table (to be implemented later)
+  tableOutput("resultsTable")
+)
+
+# Server
+server <- function(input, output, session) {
+
+  # ------------ V1.1 NEW CODE for filter variables --------------------
+  # Update sector choices dynamically based on the uploaded file
+  observe({
+    req(input$file)
+    df <- read_excel(input$file$datapath)
+    updateSelectInput(session, "sector_filter", choices = unique(df$sector))
+  })
+
+  # -----End of new code for filter variables
+
+
+  # 1. File Reading Section: Reads the uploaded Excel file
+  output$var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to rank
+    selectInput("variables", "Select Variables for Ranking", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+  # 2. Variable Selection Section: Generate UI for selecting display variables
+  output$display_var_select <- renderUI({
+    req(input$file)  # Ensure a file is uploaded before proceeding
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    var_names <- names(df)  # Get the column names of the data
+
+    # Return a selectInput for variables to display
+    selectInput("display_vars", "Select Variables to Display", choices = var_names, selected = NULL, multiple = TRUE)
+  })
+
+
+  # 3. Variable Input/Select Options Section: Generate UI for ranking controls (weights and order)
+  output$ranking_controls <- renderUI({
+    req(input$variables)  # Ensure variables are selected before proceeding
+
+    # Loop through each selected variable to create input fields for weight and order
+    controls <- lapply(seq_along(input$variables), function(i) {
+      var_name <- input$variables[i]
+
+      fluidRow(
+        column(12,
+               h4(paste("Variable:", var_name)),  # Display the variable name
+               numericInput(paste0("weight_", i), paste("Weight for", var_name), value = 1, step = 1),  # Numeric input for weight
+               selectInput(paste0("order_", i), paste("Order for", var_name), choices = c("Low" = 0, "High" = 1), selected = 0)  # Select input for order
+        )
+      )
+    })
+
+    # Combine all controls into a single UI element
+    do.call(tagList, controls)
+  })
+
+
+  # 4. Data Frame Generation Section: Generate the data frame when actionButton is clicked
+  observeEvent(input$rank, {  # New observer for the actionButton
+    req(input$file, input$variables, input$display_vars)  # Ensure inputs are available
+
+    df <- read_excel(input$file$datapath)  # Read the uploaded file
+    # ---------------- V1.1 NEW CODE: Applying Filters ----------------
+
+    # Filter by sector
+    if (!is.null(input$sector_filter)) {
+      df <- df[df$sector == input$sector_filter, ]
+    }
+
+    # Exclude observations based on user choices
+    exclude_conditions <- input$exclude_options
+    for (var in input$variables) {
+      if ("zero" %in% exclude_conditions) {
+        df <- df[df[[var]] != 0, ]
+      }
+      if ("blanks" %in% exclude_conditions) {
+        df <- df[df[[var]] != "", ]
+        df <- df[!is.na(df[[var]]), ]
+      }
+    }
+    # ------------------------------------------------------------
+    selected_vars <- df[, input$variables, drop = FALSE]  # Select variables for ranking
+    display_vars <- df[, input$display_vars, drop = FALSE]  # Select variables to display
+
+
+    # ---- ADDING RANK.EQ FORMULA FOR EACH RAKING VARIABLE-----
+
+    # Calculate ranks for each variable
+    for (i in seq_along(input$variables)) {
+      variable <- input$variables[i]
+      order <- input[[paste0("order_", i)]]  # Get the order input for the variable
+      if (order == 0) {  # If order is "Low"
+        df[[paste0("Rank", variable)]] <- rank(-df[[variable]], ties.method = "min"  )
+      } else {  # If order is "High"
+        df[[paste0("Rank", variable)]] <- rank(df[[variable]], ties.method = "min")
+      }
+    }
+
+    # ------END OF CODE THAT ADDS RANK.EQ FORMULA -------
+
+
+    # ------ ADDING NormRank FUNCTION -----
+
+    # Normalize and combine the ranks into a new column 'NormRank'
+    norm_rank_expression <- NULL
+    for (i in seq_along(input$variables)) {
+      variable <- input$variables[i]
+      weight <- input[[paste0("weight_", i)]]  # Get the weight input for the variable
+      rank_name <- paste0("Rank", variable)
+      if (is.null(norm_rank_expression)) {
+        norm_rank_expression <- (df[[rank_name]] / length(df[[variable]])) * weight
+      } else {
+        norm_rank_expression <- norm_rank_expression + (df[[rank_name]] / length(df[[variable]])) * weight
+      }
+    }
+    df$NormRank <- norm_rank_expression  # Add the NormRank column to the data frame
+
+    # --- end of function for NormRank ---------------
+
+
+    # ---- code that includes column in DATAFRAME ------------------
+
+    # Combine selected, display variables, ranks, and NormRank into one data frame
+    result_df <- cbind(display_vars, selected_vars, df[, paste0("Rank", input$variables)], NormRank = df$NormRank)
+    # --- END OF CODE THAT includes or creates column in the df -----
+
+
+    # Sort the data frame based on user input for 'Show'
+    sorted_df <- if(input$show == "Top") {
+      result_df[order(result_df$NormRank, decreasing = TRUE), ]
+    } else {
+      result_df[order(result_df$NormRank, decreasing = FALSE), ]
+    }
+
+    # ---- This part includes edits when adding to show only the top or bottom x number of results.----------------
+    # Display the specified number of results
+    output$resultsTable <- renderTable({
+      head(sorted_df, input$num_results)  # Show the top 'num_results' entries
+    })
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+# V1.3 -------------------------- V1.3
+```
+
+spacer

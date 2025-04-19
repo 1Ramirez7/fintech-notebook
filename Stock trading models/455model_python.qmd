@@ -1,0 +1,275 @@
+---
+title: "PCRX   Capital Structure Analysis" 
+# PCRX can be streamline by editing the name in a YML file
+subtitle: "Stock minimal dupont analysis"
+author: "Eduardo I Ramirez"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 5
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+import pandas as pd
+import plotly.graph_objects as go
+import numpy as np
+from scipy import stats
+from plotly.subplots import make_subplots
+
+# edit equity name here.    
+equity = "PCRX" 
+
+df = pd.read_excel("./data/DATA_dupontmodel.xlsx")
+
+```
+
+
+
+
+__PCRX Value of Accounts Receivables Analysis Scatter Plot__
+```{python}
+# scatter plot for only one firm. Value of credit analysis, ch20 slide 18
+# It is good to see how profitable or dangerous it can be for a firm to increase accounts receivable. 
+import plotly.graph_objects as go
+import numpy as np
+from scipy import stats
+
+x, y = df['11Accounts_Receivable_Trade_RDUS'], df['9Net_Income_Available_to_Common_RDUS']
+mask = ~np.isnan(x) & ~np.isnan(y)
+x_filt, y_filt = x[mask], y[mask]
+slope, intercept, r_value, p_value, std_err = stats.linregress(x_filt, y_filt)
+std_x, std_y = np.std(x_filt), np.std(y_filt)
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=x_filt, y=y_filt, mode='markers', name=f'{equity} Data'))
+fig.add_trace(go.Scatter(x=x_filt, y=intercept + slope * x_filt, mode='lines', name='Trendline', line=dict(color='red', dash='dash')))
+fig.update_layout(title=f'{equity} Scatterplot with Trendline', xaxis_title='Accounts Receivable', yaxis_title='Net Income', showlegend=False, annotations=[dict(x=np.max(x_filt), y=np.min(y_filt), xref='x', yref='y', text=f'Y = {slope:.2f}X + {intercept:.2f}<br>R² = {r_value**2:.2f}<br>St_Dev X:{std_x:.0f} St_Dev Y:{std_y:.0f}', showarrow=False)])
+fig.show()
+
+
+```
+
+
+
+
+
+
+
+__time series graph of Book leverage__
+
+
+```{python}
+# time series graph of Book leverage 
+# Long-term debt to capitalization ratio
+# Long-term debt to capitalization ratio is a solvency measure that shows the degree of financial leverage a firm takes on.
+# It calculates the proportion of long-term debt a company uses to finance its assets, relative to the amount of equity used for the same purpose.
+# A higher ratio result means that a company is more highly leveraged, which carries a higher risk of insolvency.
+import plotly.graph_objects as go
+
+q_rdus = df['Q_RDUS'] 
+book_leverage_rdus = df['43Book  Leverage_RDUS']
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=q_rdus, y=book_leverage_rdus, mode='lines+markers', name='Book Leverage'))
+fig.update_layout(title=f'Relationship of {equity} with Book Leverage',
+                  xaxis_title='Quarters',
+                  yaxis_title='Book Leverage',
+                  legend_title='Variable') # edit text
+fig.show()
+```
+
+
+
+__Common stock vs last price graph__
+```{python}
+# Common stock vs last price graph
+# Last price > common stock is better and vice versa.  
+import plotly.graph_objects as go
+
+
+q, common_stock, last_price=df['Q_RDUS'],df['25Common Stock_RDUS'],df['24Last Price_RDUS']
+fig=go.Figure()
+fig.add_trace(go.Scatter(x=q,y=common_stock,mode='lines+markers',name='Common Stock'))
+fig.add_trace(go.Scatter(x=q,y=last_price,mode='lines+markers',name='Last Price',yaxis='y2'))
+fig.update_layout(title=f'{equity} Common Stock vs Last Price',xaxis_title='Quarters',yaxis=dict(title='Common Stock (in thousands)',side='left'),yaxis2=dict(title='Last Price',side='right',overlaying='y',showgrid=False),legend_title='Variable')
+fig.show()
+```
+
+
+
+
+__Time Series: Trend and Cycle for PCR days accounts__
+```{python}
+# time series for RDUS days accounts 
+# days rece - measures the average number of days it takes a company to collect payment for a sale 
+# days inventory - number of days or time required for a business to convert its inventory into sales.
+# payable turnover - is a short-term liquidity measure used to quantify the rate at which a company pays off its suppliers.
+
+
+import plotly.graph_objects as go
+
+
+q_rdus = df['Q_RDUS'] # edit variable
+days_sales_receivables_rdus = df["60Day's sales in receivables_RDUS"] # edit variable
+days_sales_inventory_rdus = df["58Day's sales in inventory_RDUS"] # edit variable
+payable_turnover_rdus = df['62payable turnover_RDUS'] # edit variable
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=q_rdus, y=days_sales_receivables_rdus, mode='lines+markers', name="Receivables")) # edit names/titles
+fig.add_trace(go.Scatter(x=q_rdus, y=days_sales_inventory_rdus, mode='lines+markers', name="Inventory")) # edit names/titles
+fig.add_trace(go.Scatter(x=q_rdus, y=payable_turnover_rdus, mode='lines+markers', name='Payable')) # edit names/titles
+fig.update_layout(title=f'Time Series line Grpah for {equity} Days accounts variables: Receivables, Inventory, and Payables', xaxis_title='', yaxis=dict(title="Days", side='left'), legend_title='Variable') # edit names/titles
+fig.show()
+
+```
+
+
+
+
+
+
+
+# WACC, CAPM, & ROE Comparison
+
+```{python}
+#| echo: false
+# from - RDUS Capital Structure Analysis
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+# File path
+
+
+# Company names and their corresponding columns in the dataframe
+companies = {
+    "RDUS": "Q_RDUS"}
+
+# Plotting WACC, CAPM, and ROE for each company
+for company, q_column in companies.items():
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+    # WACC and CAPM on primary y-axis
+    fig.add_trace(go.Scatter(x=df[q_column], y=df['35WACC Cost of Equity_' + company], name='CAPM'), secondary_y=False)
+    fig.add_trace(go.Scatter(x=df[q_column], y=df['37Weighted Average Cost of Cap_' + company], name='WACC'), secondary_y=False)
+
+    # ROE on secondary y-axis
+    fig.add_trace(go.Scatter(x=df[q_column], y=df['65Return on Equity (ROE)_' + company], name='ROE'), secondary_y=True)
+
+    # Update layout
+    fig.update_layout(title=f'{equity}: WACC, CAPM, & ROE Comparison', title_x=0.5)
+    fig.update_xaxes(title_text='')
+    fig.update_yaxes(title_text='WACC & CAPM', secondary_y=False)
+    fig.update_yaxes(title_text='ROE (%)', tickformat=".2%", secondary_y=True)
+    fig.update_layout(legend=dict(x=.85, y=1, traceorder="normal"))
+
+    fig.show()
+
+
+
+
+```
+
+
+
+
+
+
+```{python}
+
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import numpy as np
+
+# Load data from Excel
+
+
+# Define the columns for expenses and sales
+expense_columns = {
+    '2Cost of Revenue_RDUS': 'Cost of Revenue (%)',
+    '4Selling_Gen_ Admin_Exps_RDUS': 'Selling & General Admin Expenses (%)',
+    '6Interest_Expense_RDUS': 'Interest Expense (%)',
+    '79other expenses _RDUS': 'Other Expenses (%)'
+}
+sales_column = '77Sales_RDUS'
+
+# Calculate percentages of each expense relative to sales
+for col in expense_columns.keys():
+    df[expense_columns[col]] = df[col] / df[sales_column] * 100
+
+# Determine the number of plots
+num_plots = len(expense_columns)
+cols = 2  # Change the number of columns based on your preference and screen size
+rows = (num_plots + 1) // cols  # Calculate rows needed
+
+# Initialize the plot with subplot configuration
+fig = make_subplots(rows=rows, cols=cols, subplot_titles=list(expense_columns.values()))
+
+# Add traces for each expense as a percentage of sales and their trend lines
+for idx, (col, label) in enumerate(expense_columns.items()):
+    row, col = (idx // cols) + 1, (idx % cols) + 1
+    # Scatter plot of the original data
+    fig.add_trace(
+        go.Scatter(x=df['Q_RDUS'], y=df[label], mode='lines+markers', name=label),
+        row=row, col=col
+    )
+    # Calculate trend line
+    # Handle missing values by dropping them
+    clean_df = df.dropna(subset=['Q_RDUS', label])
+    # Fit a linear regression
+    if clean_df.shape[0] > 1:  # Ensure there are at least two points for regression
+        x = np.arange(len(clean_df['Q_RDUS']))  # Create a numerical x axis for regression
+        fit = np.polyfit(x, clean_df[label], 1)
+        trend_line = np.polyval(fit, x)
+        # Add trend line to the plot
+        fig.add_trace(
+            go.Scatter(x=clean_df['Q_RDUS'], y=trend_line, mode='lines', name=f'Trend of {label}', line=dict(color='red')),
+            row=row, col=col
+        )
+
+# Update the layout with axis labels and settings
+fig.update_layout(
+    title='Expenses as a Percentage of Sales Over Time',
+    xaxis_title='Quarter',
+    yaxis_title='Percentage (%)',
+    showlegend=False,
+    width=900,  # Adjust the total width here to fit your display or presentation medium
+    height=400 * rows,  # Adjust the height based on the number of rows
+    margin=dict(l=20, r=20, t=100, b=20)  # Adjust margins to fit titles and axis labels
+)
+
+# Adjust individual axes if needed
+for i in range(1, num_plots + 1):
+    fig.update_xaxes(title_text='Quarter', row=(i-1)//cols + 1, col=(i-1)%cols + 1)
+    fig.update_yaxes(title_text='Percentage (%)', row=(i-1)//cols + 1, col=(i-1)%cols + 1)
+
+# Show the plot
+fig.show()
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+spacer

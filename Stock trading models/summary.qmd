@@ -1,0 +1,175 @@
+---
+title: "Summary view for Equity"
+subtitle: "Course: Financial Economics"
+author: "Eduardo I Ramirez"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 5
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+---
+
+## Common stock vs last price graph
+
+This code uses tidyquant to get stock data instead of having to rely on the raw data. code is also set up to be edited according to the stock being use. will be useful when streamlining a larger code.
+
+```{r}
+# I have python code for this same graph
+# Load necessary libraries
+library(tidyquant)
+library(dplyr)
+library(lubridate)
+library(plotly)
+
+# Set the stock symbol
+stock_symbol <- "DGII"  # Change this to use another stock
+
+# Get data for the chosen stock
+stock_data <- tq_get(stock_symbol, get = "stock.prices", from = "2018-01-01", to = "2024-08-20")
+
+# Define the date range for the plot
+start_date <- ymd("2024-07-01")
+end_date <- ymd("2024-08-21")
+
+# Filter data for the specified date range and prepare both close price and volume
+filtered_data <- stock_data %>%
+    dplyr::filter(date >= start_date & date <= end_date) %>%
+    mutate(volume_millions = volume / 1000000)  # Adjust volume
+
+# Create plotly object
+fig <- plot_ly(data = filtered_data, x = ~date) %>%
+    add_trace(y = ~close, name = 'Close Price', type = 'scatter', mode = 'lines', line = list(color = 'blue')) %>%
+    add_trace(y = ~volume_millions, name = 'Volume (millions)', type = 'scatter', mode = 'lines', line = list(color = 'red'), yaxis = 'y2') %>%
+    layout(
+        title = paste(stock_symbol, "Trading Close Prices and Volume Over Time"),
+        xaxis = list(title = "Date"),
+        yaxis = list(title = "Close Price"),
+        yaxis2 = list(title = "Volume (millions)", overlaying = "y", side = "right", showgrid = FALSE),
+        legend = list(title = "Variable"),
+        showlegend = TRUE
+    )
+
+# Output the plot
+fig
+
+```
+
+spacer
+
+# Same as code above but this just downloads the png w/out displaying in rstudio.
+
+```{r}
+library(tidyquant)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+
+# Set the stock symbol
+stock_symbol <- "slgdd"  # Change this to use another stock
+
+# Get data for the chosen stock
+stock_data <- tq_get(stock_symbol, get = "stock.prices", from = "2018-08-01", to = "2024-08-28")
+
+# Define the date range for the plot
+start_date <- ymd("2024-08-01")
+end_date <- ymd("2024-08-28")
+
+# Filter data for the specified date range and prepare both close price and volume
+filtered_data <- stock_data %>%
+    dplyr::filter(date >= start_date & date <= end_date) %>%
+    mutate(volume_millions = volume / 1000000)  # Adjust volume
+
+# Calculate the scaling factor for the secondary y-axis
+scale_factor <- max(filtered_data$close) / max(filtered_data$volume_millions)
+
+# Create ggplot object
+p <- ggplot(filtered_data, aes(x = date)) +
+    geom_line(aes(y = close, color = "Close Price"), size = 1) +
+    geom_line(aes(y = volume_millions * scale_factor, color = "Volume (millions)"), size = 1) +
+    scale_y_continuous(
+        name = "Close Price",
+        sec.axis = sec_axis(~ . / scale_factor, name = "Volume (millions)")
+    ) +
+    scale_color_manual(values = c("Close Price" = "blue", "Volume (millions)" = "red")) +
+    labs(
+        title = paste(stock_symbol, "Trading Close Prices and Volume Over Time"),
+        x = "Date",
+        color = "Variable"
+    ) +
+    theme_minimal() +
+    theme(
+        axis.title.y.right = element_text(color = "red"),
+        legend.position = "bottom"
+    )
+
+# Define the output directory and file name
+output_directory <- "EQS_model/PRICEVSCLOSE8_20_24"
+output_filename <- paste0(stock_symbol, " US EQUITY.png")
+output_filepath <- file.path(output_directory, output_filename)
+
+# Save the plot as a PNG file
+ggsave(output_filepath, plot = p, width = 10, height = 6)
+
+
+
+
+
+```
+
+spacer
+
+spacer
+
+# gets latest book value ....
+
+```{r}
+# get latest book value 
+# add other key metrics
+
+library(quantmod)
+fundamental_data <- getQuote("AAPL", what = yahooQF(c("Price/Book", "Book Value")))
+book_value <- as.numeric(fundamental_data["AAPL", "Book Value"])
+
+book_value
+
+
+```
+
+spacer
+
+# informational code
+
+```{r}
+library(quantmod)
+help("quantmod")
+
+
+
+```
+
+spacer
+
+```{r}
+# get latest book value 
+# add other key metrics
+
+library(quantmod)
+fundamental_data <- getQuote("AAPL")
+
+fundamental_data
+```

@@ -1,0 +1,121 @@
+---
+title: "EQS_info"
+format: html
+editor: visual
+---
+
+### **Valuation Ratios:**
+
+-   **P/E (Price to Earnings Ratio):** Measures how much investors are willing to pay per dollar of earnings.
+
+-   **P/B (Price to Book Ratio):** Compares a company's market value to its book value.
+
+-   **Bk Val Per Sh LF (Book Value Per Share):** Represents the equity available to shareholders on a per-share basis.
+
+### **Performance Ratios:**
+
+-   **ROA LF (Return on Assets):** Measures how efficiently a company uses its assets to generate profit.
+
+-   **ROE LF (Return on Equity):** Indicates the profitability relative to shareholders' equity.
+
+-   **PM LF (Profit Margin):** Represents the percentage of revenue that turns into profit.
+
+-   **Alpha**
+
+    **(Alpha):** Indicates the excess return of an investment relative to the return of a benchmark index.
+
+-   **Beta**
+
+    **(Beta):** Measures the volatility of a stock or portfolio relative to the market.
+
+### **Liquidity Ratios:**
+
+-   **Curr Ratio LF (Current Ratio):** Measures a company's ability to pay short-term obligations.
+
+-   **Quick Ratio LF:** Evaluates a company's capacity to meet short-term obligations with its most liquid assets.
+
+-   **Cash Ratio LF:** A stricter measure of liquidity, comparing cash and cash equivalents to current liabilities.
+
+### **Debt Ratios:**
+
+-   **Debt/Equity LF:** Indicates the relative proportion of shareholders' equity and debt used to finance a company's assets.
+
+-   **Debt/Assets LF:** Measures the percentage of a company’s assets that are financed by debt.
+
+-   **WACC Cost of Debt (After Tax):** The company's weighted average cost of debt, adjusted for tax benefits.
+
+### **Efficiency Ratios:**
+
+-   **Ast TO LF (Asset Turnover):** Measures a firm’s efficiency in using its assets to generate sales.
+
+-   **Inv Turnover LF (Inventory Turnover):** Shows how many times a company's inventory is sold and replaced over a period.
+
+-   **A/R Trnovr LF (Accounts Receivable Turnover):** Reflects how efficiently a firm collects revenue from its credit sales.
+
+-   **A/P LF (Accounts Payable):** Represents the short-term obligations to suppliers and creditors.
+
+    =IF(N3="", "", IF(N3=0, "", IF(M3="", "", (M3/N3))))
+
+    this excel formula does M3 or acc rec divided by acc pay. the ifs is to check for blanks n zero. this formula will still return zeros if acc rec is zero, but the shiny app will filter for blanks and zero, this is so we dont divide by zero and get error.
+
+### **WACC (Weighted Average Cost of Capital):**
+
+-   **WACC Cost of Equity:** Reflects the return required by equity investors.
+
+-   **WACC Cost of Debt (After Tax):** Represents the after-tax cost of a company’s debt.
+
+### **General Information:**
+
+-   **Ticker:** The stock symbol for the company.
+
+-   **Name:** The name of the company.
+
+-   **Offic Cls:** Likely refers to the official class or classification of the security.
+
+-   **Price**
+
+    **, Price**
+
+    **, Price:D-3:** Stock prices on different days.
+
+-   **GICS Sector:** The Global Industry Classification Standard sector of the company.
+
+-   **BICS L1 Sect Nm:** Bloomberg Industry Classification System Level 1 sector name.
+
+-   **Exp Rep Dt:** Expected report date (likely for earnings or other financial reports).
+
+-   **Accounts & Notes Receivable LF:** Represents the money owed to a company by its debtors.
+
+# Equity Criterias 
+
+### **Value Stocks:**
+
+-   **P/E:** \< 15
+
+-   **P/B:** \< 1.5
+
+-   **ROE:** Moderate to high
+
+-   **Debt/Equity:** Low
+
+### **Growth Stocks:**
+
+-   **P/E:** \> 20
+
+-   **P/B:** High
+
+-   **ROA:** High
+
+-   **ROE:** High
+
+-   **Beta:** High
+
+### **GARP Stocks:**
+
+-   **P/E:** 15-20
+
+-   **P/B:** Moderate
+
+-   **ROE:** High but reasonable
+
+-   **Debt/Equity:** Moderate
