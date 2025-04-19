@@ -1,0 +1,13 @@
+name: EQS_Rank_Model
+title: EQS_Rank_Model
+username: 4o85b6-eduardo-ramirez
+account: 4o85b6-eduardo-ramirez
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14559558
+bundleId: 10141618
+url: https://4o85b6-eduardo-ramirez.shinyapps.io/EQS_Rank_Model/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: PRICEVSCLOSE8_20_24/BLOOM8 14.xlsx|PRICEVSCLOSE8_20_24/slgdd US EQUITY.png|PRICEVSCLOSE8_20_24/vhi US EQUITY.png|ratio_def.qmd|Sector Trends.qmd|test.R|ver_history.qmd|data

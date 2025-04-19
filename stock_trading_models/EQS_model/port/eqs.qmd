@@ -1,0 +1,45 @@
+---
+title: "Equity Research Rank Model"
+subtitle: "Mirrors Bloombergs EQS Rank Functions"
+image: "cargo.png"
+categories: ["Equity", "Bloomberg"]
+format:
+  html:
+    page-layout: full
+    toc: false
+    css:
+      - "https://raw.githubusercontent.com/1Ramirez7/1ramirez7.github.io/main/styles.css"
+editor: source
+---
+
+
+
+EQS rank model is a shiny app that expands on Bloomberg Equity Search function (EQS). This model is made to rank equities based on financial metrics and or ratios chosen by the user. 
+
+This model has the ability to upload an excel file with stock information. The model comes with a default excel file loaded with the following variables: Ticker, sector, Price, BVPS, PE< Alpha:M-1, and Beta:M-1. 
+
+**Select Variables for Ranking:** This allows the user to select the variables they want to rank by. For example: PE, ALpha:M-1, and Beta:M-1.
+
+**Filter by Sector:** Models ranks by sector since financial metrics and ratios vary by sector so it can corrupt the rankings. 
+
+**Exclude obs. w/:** This excludes any stock with missing or zero values (recommended).
+
+**Number of Results:** Number of Observations to display
+
+**Show:** Top is the top ranked stocks, Bottom is the bottom ranked stocks.
+
+**Variable: variable_name:** This is the rank settings for the selected variables for the raking calculations. 
+
+**Weight for variable_name:**  This is the weight for the selected variable. The total weight for all rank variables must equal 1 or 100. This model is not dummy proof so the results will be off if the weihts do not equal 1 or 100.
+
+**Order for variable_name:** The options are 'Low' and 'High'. Low threats the lowest value as the best rank. High treats the highest value as the best rank. So for example if we are ranking value stocks, then rank by low PE. If ranking high volatility stocks, then rank by high Beta.
+
+
+
+::: {.full-iframe}
+<iframe
+  src="https://4o85b6-eduardo-ramirez.shinyapps.io/EQS_Rank_Model/"
+  allowfullscreen
+></iframe>
+:::
+

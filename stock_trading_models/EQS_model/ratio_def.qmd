@@ -86,7 +86,7 @@ editor: visual
 
 -   **Accounts & Notes Receivable LF:** Represents the money owed to a company by its debtors.
 
-# Equity Criterias 
+# Equity Criterias
 
 ### **Value Stocks:**
 
