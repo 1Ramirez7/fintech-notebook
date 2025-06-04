@@ -1,29 +1,20 @@
+# ---- EQS Shiny App  | Version 1.4 + default GitHub workbook ----
 library(shiny)
 library(readxl)
 library(curl)
 
-# v1.5
-
+# raw GitHub URL for the default/sample workbook (.xlsx)
 fallback_excel_url <- "https://raw.githubusercontent.com/1Ramirez7/fintech-notebook/main/stock_trading_models/EQS_model/data/papersample.xlsx"
-
-##########################
-# UI Panel section
-#
-##########################
 
 ui <- fluidPage(
   titlePanel("EQS"),
   fluidRow(
     column(
       4,
-      fileInput("file", "Choose Excel File", accept = ".xlsx"),
+      fileInput("file", "Choose Excel File", accept = ".xlsx"),      # optional upload
       uiOutput("var_select"),
       uiOutput("display_var_select"),
-      checkboxInput("apply_filter", "Apply column filter", value = FALSE), # v1.5
-      conditionalPanel( # v1.5
-        condition = "input.apply_filter == true", # v1.5
-        selectInput("filter_column", "Select Column to Filter", choices = NULL),
-        uiOutput("filter_value_ui")), # v1.5
+      selectInput("sector_filter", "Filter by Sector", choices = NULL),
       checkboxGroupInput(
         "exclude_options", "Exclude obs. w/",
         choices = list("Blanks" = "blanks", "0" = "zero")
@@ -37,18 +28,9 @@ ui <- fluidPage(
   tableOutput("resultsTable")
 )
 
-
-##########################
-# Server Logic section
-#
-##########################
-
 server <- function(input, output, session) {
   
-  ##########################
-  # Data Loading section
-  #
-  ##########################
+  ## -------- data source (upload OR default) ---------------------
   get_data <- reactive({
     if (!is.null(input$file)) {
       read_excel(input$file$datapath)
@@ -59,26 +41,13 @@ server <- function(input, output, session) {
     }
   })
   
-  ##########################
-  # Sector Dropdown Update section
-  # v1.5 change from filter by sector to user pick.
-  ##########################
-  observe({ 
+  ## -------- update sector dropdown ------------------------------
+  observe({
     df <- get_data()
-    updateSelectInput(session, "filter_column", choices = names(df))
+    updateSelectInput(session, "sector_filter", choices = unique(df$sector))
   })
   
-  output$filter_value_ui <- renderUI({
-    req(input$filter_column)
-    df   <- get_data()
-    selectInput("filter_value", "Select Value to Filter",
-                choices = unique(df[[input$filter_column]]))
-  })
-  
-  ##########################
-  # Variable Selector UI section
-  #
-  ##########################
+  ## -------- variable pickers ------------------------------------
   output$var_select <- renderUI({
     var_names <- names(get_data())
     selectInput("variables", "Select Variables for Ranking", var_names, multiple = TRUE)
@@ -89,10 +58,7 @@ server <- function(input, output, session) {
     selectInput("display_vars", "Select Variables to Display", var_names, multiple = TRUE)
   })
   
-  ##########################
-  # Ranking Control UI section
-  #
-  ##########################
+  ## -------- per‑variable weight + order controls ----------------
   output$ranking_controls <- renderUI({
     req(input$variables)
     controls <- lapply(seq_along(input$variables), function(i) {
@@ -110,17 +76,13 @@ server <- function(input, output, session) {
     do.call(tagList, controls)
   })
   
-  ##########################
-  # Ranking Engine section
-  #
-  ##########################
+  ## -------- ranking engine --------------------------------------
   observeEvent(input$rank, {
     req(input$variables, input$display_vars)
     df <- get_data()
     
     ## filters
-    if (isTRUE(input$apply_filter) && !is.null(input$filter_column) && !is.null(input$filter_value) && input$filter_value != "") { # v1.5
-      df <- df[df[[input$filter_column]] == input$filter_value, ]} # v1.5 filter by user pick
+    if (!is.null(input$sector_filter)) df <- df[df$sector == input$sector_filter, ]
     for (v in input$variables) {
       if ("zero"   %in% input$exclude_options) df <- df[df[[v]] != 0, ]
       if ("blanks" %in% input$exclude_options) df <- df[df[[v]] != "" & !is.na(df[[v]]), ]
@@ -157,19 +119,7 @@ server <- function(input, output, session) {
   })
 }
 
-##########################
-# Shiny App Execution section
-#
-##########################
-
 shinyApp(ui, server)
 
 
-# v1.5
-# organize the code by section
-# added option to filter by any variable and filter can also be null.
-
-# this is where I left off. 
-# I went looking for my older version of EQS. I want the model that filter by sector, but also made edits only to the rows that applied for that filter. This allow to have filters by sectors
-# I remember I was having some sort of trouble with the excel file modifying but I cant remember exactly. 
-
+# ---- EQS Shiny App  | Version 1.4 + default GitHub workbook ----

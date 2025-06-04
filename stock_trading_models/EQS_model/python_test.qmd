@@ -1,0 +1,94 @@
+---
+title: "python_test"
+format: html
+---
+
+
+**The below is sample code to get company information
+
+```{python}
+
+import yfinance as yf
+
+# Create Ticker object
+cvx = yf.Ticker("CVX")
+
+# Get company info
+info = cvx.info
+
+# Print selected key fields
+fields_to_show = [
+    "longName", "sector", "industry", "country", "website",
+    "marketCap", "trailingPE", "forwardPE", "dividendYield",
+    "beta", "fullTimeEmployees", "longBusinessSummary"
+]
+
+for field in fields_to_show:
+    print(f"{field}: {info.get(field)}")
+
+
+
+```
+
+```{python}
+# code to show all available for yfinance
+
+import yfinance as yf
+
+# Get full info for CVX
+info = yf.Ticker("CVX").info
+
+# Print all keys and values in sorted order
+for key in sorted(info.keys()):
+    print(f"{key}: {info[key]}")
+
+
+```
+
+
+
+**Sample to get sector**
+
+```{python}
+import yfinance as yf
+
+# Create Ticker object
+cvx = yf.Ticker("CVX")
+
+# Print sector
+print("Sector:", cvx.info.get("sector"))
+
+```
+
+
+The code below is meant to get the sector information for stocks
+
+```{python}
+
+import yfinance as yf
+import pandas as pd
+
+# Load Excel file
+file_path = r"C://Users//eduar//Downloads//test8-20_index_6-2-25.xlsx"
+df = pd.read_excel(file_path)
+
+# Get sector and industry info
+def get_sector_industry(ticker):
+    try:
+        info = yf.Ticker(ticker).info
+        return pd.Series([info.get("sector"), info.get("industry")])
+    except:
+        return pd.Series([None, None])
+
+# Apply to Ticker column
+df[["Sector", "Industry"]] = df["Ticker"].apply(get_sector_industry)
+
+# Save updated file
+output_path = r"C://Users//eduar//Downloads//test8-20_index_6-2-25_sector_industry.xlsx"
+df.to_excel(output_path, index=False)
+
+
+
+
+```
+

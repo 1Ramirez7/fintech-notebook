@@ -1,0 +1,252 @@
+---
+title: "test"
+format: html
+---
+
+
+# the code below is the last code where I edited excel files
+
+```{r}
+
+# Load libraries and read files
+library(readxl)
+library(openxlsx) # V1.2 --------------
+library(dplyr) # V1.2 ----------------- 
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+
+# V1.1 Filter the data eg: by sector, blanks, and or zero values.
+df_f <- df[df$sector == "Banks", ]
+# Exclude observations for variables "BVPS" & "Price"
+df_f <- df_f[df_f$BVPS != 0 & df_f$BVPS != "" & !is.na(df_f$BVPS), ] # excldes 0 & blanks
+df_f <- df_f[df_f$Price != 0 & df_f$Price != "" & !is.na(df_f$Price), ]
+
+# --- -- End of code for filters ------------
+
+
+# Define variables and weights and added visual low and high for des and asc.
+variables <- c("Price", "BVPS") # sample usage "Price", "BVPS", "PE"
+weights <- c(0.5, 0.5) # 0.35, 0.35, 0.3
+directions <- c("low", "high") # "low" for descending, "high" for ascending
+
+# Calculate ranks for each variable
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  if (directions[i] == "low") {
+    df_f[[paste0("Rank", variable)]] <- rank(-df_f[[variable]], ties.method = "min")
+  } else {
+    df_f[[paste0("Rank", variable)]] <- rank(df_f[[variable]], ties.method = "min")
+  }
+}
+
+
+# Normalize and combine the ranks
+norm_rank_expression <- NULL
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  weight <- weights[i]
+  rank_name <- paste0("Rank", variable)
+  if (is.null(norm_rank_expression)) {
+    norm_rank_expression <- (df_f[[rank_name]] / length(df_f[[variable]])) * weight
+  } else {
+    norm_rank_expression <- norm_rank_expression + (df_f[[rank_name]] / length(df_f[[variable]])) * weight
+  }
+}
+df_f$NormRank <- norm_rank_expression
+
+
+
+
+# Display NormRank: "Top" for descending, "Bottom" for ascending
+order_to_display <- "Top"
+number_of_results <- 40
+
+# Display the data frame sorted by normalized ranks according to selected order
+sorted_df_f <- if(order_to_display == "Top") {
+  df_f[order(df_f$NormRank, decreasing = TRUE), ]
+} else {
+  df_f[order(df_f$NormRank, decreasing = FALSE), ]
+}
+
+# Print the specified number of results
+print(head(sorted_df_f, number_of_results))
+
+
+# ---- V1.2 NEW CODE for EXCEL EDITING ----------------
+# ---- This code section functions independently so it can be excluded for faster testing -------
+
+# edit column name for NormRank when saving to Excel
+norm_rank_column_name <- "test111"
+
+# Ensure that all existing data in the NormRank column are initially set to NA if the column exists
+if (norm_rank_column_name %in% names(df)) {
+  df[[norm_rank_column_name]] <- NA
+} else {
+  df[[norm_rank_column_name]] <- NA  # Add the column with NA if it does not exist
+}
+
+# Merge or update NormRank values from df_f
+# Assume 'Ticker' is the matching key column in both df and df_f
+df <- left_join(df, df_f[c("Ticker", "NormRank")], by = "Ticker")
+
+# Update the NormRank in the main df using coalesce to fill NA values with new data
+df[[norm_rank_column_name]] <- coalesce(df$NormRank, df[[norm_rank_column_name]])
+df$NormRank <- NULL  # Remove the temporary NormRank column if it was created during merge
+
+# Write the updated dataframe back to the Excel file, overwriting the existing file
+write.xlsx(df, file = "C:/Users/eduar/Downloads/papersample.xlsx", overwrite = TRUE)
+
+
+# ----------V1.2 END OF CODE for Excel Editing ---------------
+
+```
+
+
+
+**Updating**
+
+ - So I'm going to update to have a unique id for each observation. 
+ - I will then make a value column in the main df
+ - I will make a new df and pull only what I'm raking, and then rejoin to main df using unique id
+ - This is so edits to observation are only made base on sector/critiria and can be done multiple times without overwritten value column since I'm doing joins. 
+
+```{r}
+
+# Load libraries and read files
+library(readxl)
+library(openxlsx) # V1.2 --------------
+library(dplyr) # V1.2 ----------------- 
+df <- read_excel("C:/Users/eduar/Downloads/papersample.xlsx")
+
+
+# V1.1 Filter the data eg: by sector, blanks, and or zero values.
+df_f <- df[df$sector == "Software", ]
+df_f <- df_f[df_f$BVPS != 0 & df_f$BVPS != "" & !is.na(df_f$BVPS), ] 
+df_f <- df_f[df_f$Price != 0 & df_f$Price != "" & !is.na(df_f$Price), ]
+
+
+
+
+# Define variables and weights and added visual low and high for des and asc.
+variables <- c("Price", "BVPS") # sample usage "Price", "BVPS", "PE"
+weights <- c(0.5, 0.5) # 0.35, 0.35, 0.3
+directions <- c("low", "high") # "low" for descending, "high" for ascending
+
+# Calculate ranks for each variable
+df_f1 <- df_f
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  if (directions[i] == "low") {
+    df_f1[[paste0("Rank", variable)]] <- rank(-df_f1[[variable]], ties.method = "min")
+  } else {
+    df_f1[[paste0("Rank", variable)]] <- rank(df_f1[[variable]], ties.method = "min")
+  }
+}
+
+
+df_f2 <- df_f1
+norm_rank_expression <- NULL
+for (i in seq_along(variables)) {
+  variable <- variables[i]
+  weight <- weights[i]
+  rank_name <- paste0("Rank", variable)
+  if (is.null(norm_rank_expression)) {
+    norm_rank_expression <- (df_f2[[rank_name]] / length(df_f2[[variable]])) * weight
+  } else {
+    norm_rank_expression <- norm_rank_expression + (df_f2[[rank_name]] / length(df_f2[[variable]])) * weight
+  }
+}
+df_f2$NormRank <- norm_rank_expression
+
+
+
+# Display NormRank: "Top" for descending, "Bottom" for ascending
+# Step 3: Sort by NormRank (Top/Bottom selection)
+order_to_display <- "Top"
+number_of_results <- 40
+
+# Display the data frame sorted by normalized ranks according to selected order
+df_f3 <- if(order_to_display == "Top") {
+  df_f2[order(df_f2$NormRank, decreasing = TRUE), ]
+} else {
+  df_f2[order(df_f2$NormRank, decreasing = FALSE), ]
+}
+print(head(df_f3, number_of_results))
+
+
+
+# step 4: This code joins the new df_f2 with the main df designated column. eg: value,garth_stock etc
+df4 <- df
+
+df4 <- df4 %>%
+  left_join(df_f2 %>% select(stock_id, NormRank), by = "stock_id") %>%
+  mutate(value = ifelse(!is.na(NormRank), NormRank, value)) %>%
+  select(-NormRank)
+
+write.xlsx(df4, file = "C:/Users/eduar/Downloads/papersample.xlsx", overwrite = TRUE)
+
+
+```
+
+
+I'm trying to see if I can get sector information for stocks using tidyquant and or yfinance. I was able to do this in the python_test.qmd file.
+
+
+
+The following is doing the code for each option in the sector column to save time
+
+```{r}
+# Load libraries and read file
+library(readxl)
+library(openxlsx)
+library(dplyr)
+
+df <- read_excel("C:/Users/eduar/Downloads/test8-20_index_6-2-25.xlsx")
+
+# -------------------------------------------------
+# 1.  Clean data (remove blanks / zeros)
+# -------------------------------------------------
+df_clean <- df %>% 
+  filter(
+    PE  != 0 & PE  != "" & !is.na(PE),
+    PB != 0 & PB != "" & !is.na(PB)
+  )
+
+# -------------------------------------------------
+# 2.  Parameters for ranking
+# -------------------------------------------------
+variables  <- c("PB", "PE")            # metrics to rank
+weights    <- c(0.5, 0.5)                   # weights for each metric
+directions <- c("high",  "low")             # "low" = smaller is better
+
+# -------------------------------------------------
+# 3.  Rank *within every sector* and build NormRank
+# -------------------------------------------------
+ranked <- df_clean %>% 
+  group_by(sector) %>% 
+  mutate(
+    RankPB = if (directions[1] == "low") rank(-PB, ties.method = "min")
+                else                         rank( PB, ties.method = "min"),
+    RankPE  = if (directions[2] == "low") rank(-PE,  ties.method = "min")
+                else                         rank( PE,  ties.method = "min"),
+    NormRank  = (RankPB / n()) * weights[1] +
+                (RankPE  / n()) * weights[2]
+  ) %>% 
+  ungroup() %>% 
+  select(stock_id, NormRank)
+
+# -------------------------------------------------
+# 4.  Join NormRank back to the master table
+# -------------------------------------------------
+df_final <- df %>% 
+  select(-any_of("NormRank")) %>%          # drop temp col so join adds clean NormRank
+  left_join(ranked, by = "stock_id") %>% 
+  mutate(value = ifelse(!is.na(NormRank), NormRank, value)) %>% 
+  select(-NormRank)
+
+write.xlsx(df_final,
+           file = "C:/Users/eduar/Downloads/test8-20_index_6-2-25.xlsx",
+           overwrite = TRUE)
+
+```
+
