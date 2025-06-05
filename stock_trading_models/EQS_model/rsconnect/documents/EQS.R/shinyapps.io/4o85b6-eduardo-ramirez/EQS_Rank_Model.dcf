@@ -5,9 +5,9 @@ account: 4o85b6-eduardo-ramirez
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 14559558
-bundleId: 10141618
+bundleId: 10405459
 url: https://4o85b6-eduardo-ramirez.shinyapps.io/EQS_Rank_Model/
 version: 1
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: PRICEVSCLOSE8_20_24/BLOOM8 14.xlsx|PRICEVSCLOSE8_20_24/slgdd US EQUITY.png|PRICEVSCLOSE8_20_24/vhi US EQUITY.png|ratio_def.qmd|Sector Trends.qmd|test.R|ver_history.qmd|data
+ignoredFiles: .RData|commit_version_notes.md|data/papersample.xlsx|python_test.qmd|r_code_test.qmd|ratio_def.qmd|test.R|test2.R|versions/v1_4.R|versions/v1_5.R|versions/v1_6.R|port
