@@ -1,0 +1,611 @@
+---
+title: "python_test"
+format: html
+---
+
+
+My goal is to build a shiny app that where I can see the list of biggest winners and biggest losers. 
+- Also get their sector and sub sector
+- also get company description
+- also get volume total and volume as a percentage of shares outstanding
+  
+Also get list of biggest trades by volume and volume as a % of shares outstanding. 
+
+
+The main goal of this is just to paint a picture of the biggest moves in the market. 
+
+# Step 1
+
+I need to build code to get closing prices for stocks 
+
+**What I need** 
+
+I need a list of all US equity stocks. Code juse uses US equity so I either have a list with just symbols or remove US EQUITY with code before running.
+
+```{python}
+
+import yfinance as yf
+import pandas as pd
+
+# Load Excel file
+file_path = r"ticker_sample.xlsx"
+df = pd.read_excel(file_path)
+
+# Define time frame
+start_date = "2024-05-13"
+end_date = "2024-06-07"
+
+# Get daily closing prices with each date in its own column
+def get_closing_prices(ticker):
+    try:
+        data = yf.Ticker(ticker).history(start=start_date, end=end_date)
+        closes = data["Close"]
+        closes.index = closes.index.strftime("%Y-%m-%d")
+        return closes
+    except:
+        return pd.Series()
+
+# Apply and expand into separate columns
+closes_df = df["ticker"].apply(get_closing_prices).apply(pd.Series)
+closes_df.columns.name = None
+
+# Combine and save
+result = pd.concat([df, closes_df], axis=1)
+result.to_excel(r"ticker_sample_closes.xlsx", index=False)
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Useful codes
+
+
+
+
+**This cell displays all informationa availbale vie yfinance**
+
+```{python}
+# This cell displays all informationa availbale vie yfinance
+import yfinance as yf
+
+# Get full info for CVX
+info = yf.Ticker("CVX").info
+
+# Print all keys and values in sorted order
+for key in sorted(info.keys()):
+    print(f"{key}: {info[key]}")
+
+
+
+
+```
+
+
+
+**This chunk gets Setor and industry names.**
+
+```{python}
+# This chunk gets Setor and industry names.
+# ticker column must just have ticker symbol only
+
+import yfinance as yf
+import pandas as pd
+
+# Load Excel file
+file_path = r"ticker_sample.xlsx"
+df = pd.read_excel(file_path)
+
+# Get sector and industry info
+def get_sector_industry(ticker):
+    try:
+        info = yf.Ticker(ticker).info
+        return pd.Series([info.get("sector"), info.get("industry")])
+    except:
+        return pd.Series([None, None])
+
+# Apply to Ticker column
+df[["Sector", "Industry"]] = df["ticker"].apply(get_sector_industry)
+
+# Save updated file
+output_path = r"ticker_sample_one.xlsx"
+df.to_excel(output_path, index=False)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+spacer
