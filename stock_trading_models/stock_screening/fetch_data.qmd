@@ -493,9 +493,19 @@ This makes the date_id
 df_new["date_id"] = pd.to_datetime(df_new["calendar_date"]).dt.strftime("%Y%m%d").astype(int)
 
 
+**Code to pull stock information**
+
+Ok the code does the same as above, but I'm now trying to pull the ticker list from index.csv and joined df_new to the main csv file. 
+- This is so new data does not overwrite old data as it is doing now. 
+- This code will add by "id" so add new id or replace existing ids. 
+  - The reason I'm replacing ids is when I add new information, to make sure it is updated, 
+  - eventually I just want to updated the change fields and not replace the whole id. 
+    - Actually this should be mandatory. 
+    - So when joining I should specify what columns should be updated. 
+
+
 
 ```{python}
-
 import pandas as pd
 from datetime import datetime
 import yfinance as yf
@@ -504,9 +514,9 @@ import time
 
 # ── PARAMETERS ─────────────────────────────────────────────
 FILE_PATH = "sql/fact_close_price.csv"  # existing fact table
-START_DATE = "2024-06-01"                # inclusive
-END_DATE = "2025-06-15"                  # exclusive (yfinance)
-REQUEST_BATCH_SIZE = 120                 # #'s' of tickers to process before a pause
+START_DATE = "2025-06-14"                # inclusive
+END_DATE = "2025-06-17"                  # exclusive (yfinance)
+REQUEST_BATCH_SIZE = 1000                 # #'s' of tickers to process before a pause
 PAUSE_DURATION_SECONDS = 10              # Duration of the pause
 # -----------------------------------------------------------
 
@@ -515,7 +525,7 @@ if not os.path.exists(FILE_PATH):
     raise FileNotFoundError(f"{FILE_PATH} not found.")
 
 df_existing = pd.read_csv(FILE_PATH)
-ticker_lookup = df_existing[["ticker", "ticker_id"]].drop_duplicates()
+ticker_lookup = pd.read_csv("sql/index.csv")[["ticker", "ticker_id"]].drop_duplicates()
 
 # 2. Pull close prices and additional info for each ticker
 def fetch_data(ticker):
@@ -574,28 +584,142 @@ df_new["id"] = df_new.apply(
 # 5. Select/rename final columns
 df_new = df_new[["id", "ticker_id", "ticker", "date_id", "date", "close_price", "dayHigh", "dayLow", "volume"]]
 
-# 6. Append to fact table, dropping duplicate ids
-df_final = (
-    pd.concat([df_existing, df_new], ignore_index=True)
-      .drop_duplicates(subset="id")
-      .sort_values(["ticker_id", "date_id"])
-)
+# 6. Define columns to update in fact_close_price.csv
+update_cols = ["close_price", "dayHigh", "dayLow", "volume"] # maybe include date_id & date?
+
+df_updates = df_new[["id"] + update_cols].set_index("id")
+df_existing.set_index("id", inplace=True)
+df_existing.update(df_updates)
+
+new_rows = df_new[~df_new["id"].isin(df_existing.index)].set_index("id")
+
+df_final = pd.concat([df_existing, new_rows])
+# 7. ─────────────────────────────────────────────────────────
+df_final.reset_index(inplace=True)
+df_final.sort_values(["ticker_id", "date_id"], inplace=True)
+
+# Save back to CSV
 df_final.to_csv(FILE_PATH, index=False)
+
 
 print("Fact close price table updated successfully!")
 
 ```
 
 
+https://raw.githubusercontent.com/1Ramirez7/fintech-notebook/refs/heads/main/stock_trading_models/stock_screening/sql/index.csv
+
+**Closer to final fetch prices code**
+
+This code is almost done
+- fetches prices using index.csv and add prices to fact_close_price.csv (github and drive links)
+- It handles when adding new id rows and when updating existing id rows. (improvements can be made)
+- I will also make the eidts in google drive to avoid having to push to github each update to the csv files. 
+
+```{python}
+import pandas as pd
+from datetime import datetime
+import yfinance as yf
+import os
+import time
+from google.colab import drive # mount drive
+drive.mount('/content/drive') # mount drive
 
 
+# ── PARAMETERS ─────────────────────────────────────────────
+FILE_PATH = "/content/drive/My Drive/stock_data/fact_close_price.csv"  # existing fact table
+START_DATE = "2025-06-14"                # inclusive
+END_DATE = "2025-06-17"                  # exclusive (yfinance)
+REQUEST_BATCH_SIZE = 1000                 # #'s' of tickers to process before a pause
+PAUSE_DURATION_SECONDS = 10              # Duration of the pause
+# -----------------------------------------------------------
+
+# 1. Load existing fact table (for ticker list & to avoid duplicates)
+if not os.path.exists(FILE_PATH):
+    raise FileNotFoundError(f"{FILE_PATH} not found.")
+
+df_existing = pd.read_csv(FILE_PATH)
+ticker_lookup = pd.read_csv("sql/index.csv")[["ticker", "ticker_id"]].drop_duplicates()
+
+# 2. Pull close prices and additional info for each ticker
+def fetch_data(ticker):
+    try:
+        yf_ticker = yf.Ticker(ticker)
+        
+        # Fetch historical prices
+        data = yf_ticker.history(start=START_DATE, end=END_DATE)
+        if data.empty:
+            print(f"No historical price data found for ticker: {ticker}")
+            return pd.DataFrame()
+        
+        data = (data[["Close", "High", "Low", "Volume"]]
+                .rename(columns={"Close": "close_price", "High": "dayHigh", "Low": "dayLow", "Volume": "volume"})
+                .reset_index()
+                .rename(columns={"Date": "date"})
+        )
+        data["date"] = data["date"].dt.date
+        return data
+    except Exception as e:
+        print(f"Error fetching data for ticker {ticker}: {e}")
+        return pd.DataFrame()
+
+frames = []
+for i, row in enumerate(ticker_lookup.itertuples(), start=1):
+    data = fetch_data(row.ticker)
+    if not data.empty: # Only append if data was successfully fetched
+        data["ticker"] = row.ticker
+        data["ticker_id"] = row.ticker_id
+        frames.append(data)
+
+    if i % REQUEST_BATCH_SIZE == 0:
+        print(f"Processed {i} tickers... pausing for {PAUSE_DURATION_SECONDS} seconds.")
+        time.sleep(PAUSE_DURATION_SECONDS)
+
+if not frames:
+    print("No new data retrieved in the specified range.")
+    quit()
+
+df_new = pd.concat(frames, ignore_index=True)
+
+# 3. Add date_id (YYYYMMDD int)
+df_new["date_id"] = pd.to_datetime(df_new["date"]).dt.strftime("%Y%m%d").astype(int)
+
+# 4. Build surrogate id
+BASE_DATE = datetime(2000, 1, 1)
+TOTAL_DAYS = (datetime(2027, 12, 31) - BASE_DATE).days + 1  # 10227
+df_new["day_count"] = (pd.to_datetime(df_new["date"]) - BASE_DATE).dt.days + 1
+df_new["id"] = df_new.apply(
+    lambda r: r["day_count"]
+    if r["ticker_id"] == 1
+    else ((r["ticker_id"] - 1) * TOTAL_DAYS + r["day_count"]),
+    axis=1,
+)
+
+# 5. Select/rename final columns
+df_new = df_new[["id", "ticker_id", "ticker", "date_id", "date", "close_price", "dayHigh", "dayLow", "volume"]]
+
+# 6. Define columns to update in fact_close_price.csv
+update_cols = ["close_price", "dayHigh", "dayLow", "volume"] # maybe include date_id & date?
+
+df_updates = df_new[["id"] + update_cols].set_index("id")
+df_existing.set_index("id", inplace=True)
+df_existing.update(df_updates)
+
+new_rows = df_new[~df_new["id"].isin(df_existing.index)].set_index("id")
+
+df_final = pd.concat([df_existing, new_rows])
+# 7. ─────────────────────────────────────────────────────────
+df_final.reset_index(inplace=True)
+df_final.sort_values(["ticker_id", "date_id"], inplace=True)
+
+# Save back to CSV
+df_final.to_csv(FILE_PATH, index=False)
 
 
+print("Fact close price table updated successfully!")
 
 
-
-
-
+```
 
 
 
