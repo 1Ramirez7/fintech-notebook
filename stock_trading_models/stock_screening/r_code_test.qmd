@@ -1,0 +1,805 @@
+---
+title: "r_code"
+format: html
+---
+
+**Plot stock time series price**
+
+```{r}
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(googledrive, readr, dplyr, ggplot2, lubridate)
+
+# ── PARAMETERS ─────────────────────────────────────────────
+ticker <- "CVU"
+date_start <- as.Date("2024-06-03")
+date_end <- as.Date("2025-06-28")
+# ───────────────────────────────────────────────────────────
+
+# load google drive file
+if (!googledrive::drive_has_token()) {googledrive::drive_auth()} 
+file <- drive_get(path = "stock_data/fact_close_price.csv")
+
+# Download to temporary path
+temp_path <- tempfile(fileext = ".csv")
+drive_download(file, path = temp_path, overwrite = TRUE)
+
+# Chunked read and filter
+filtered_data <- list()
+
+chunk_callback <- function(x, pos) {
+  x <- x |>
+    filter(ticker == !!ticker)
+
+  if (nrow(x) > 0) {
+    filtered_data[[length(filtered_data) + 1]] <<- x
+  }
+}
+
+read_csv_chunked(
+  file = temp_path,
+  callback = SideEffectChunkCallback$new(chunk_callback),
+  chunk_size = 100000,
+  col_types = cols_only(
+    ticker = col_character(),
+    date = col_character(),
+    close_price = col_double()
+  )
+)
+
+# Combine filtered chunks
+df <- bind_rows(filtered_data) |>
+  mutate(date = as.Date(date)) |>
+  filter(date >= date_start & date <= date_end)
+
+# Plot
+ggplot(df, aes(x = date, y = close_price)) +
+  geom_line() +
+  labs(
+    title = paste0(ticker, " Close Price: ", date_start, " to ", date_end),
+    x = "Date", y = "Close Price"
+  ) +
+  theme_minimal()
+
+```
+
+
+```{r}
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(googledrive, readr, dplyr, lubridate, tidyr)
+
+# ── PARAMETERS ─────────────────────────────────────────────
+previous_date <- as.Date("2025-06-16")
+current_date  <- as.Date("2025-06-17")
+# ───────────────────────────────────────────────────────────
+
+# Authenticate
+if (!googledrive::drive_has_token()) drive_auth()
+
+# Load Drive file
+file <- drive_get(path = "stock_data/fact_close_price.csv")
+temp_path <- tempfile(fileext = ".csv")
+drive_download(file, path = temp_path, overwrite = TRUE)
+
+# Read relevant columns
+df <- read_csv(
+  file = temp_path,
+  col_types = cols_only(
+    ticker = col_character(),
+    date = col_character(),
+    close_price = col_double(),
+    volume = col_double()
+  )
+) |>
+  mutate(date = as.Date(date)) |>
+  filter(date %in% c(previous_date, current_date)) |>
+  select(ticker, date, close_price, volume)
+
+# Pivot and calculate % change
+pivot_df <- df |>
+  pivot_wider(
+    names_from = date,
+    values_from = c(close_price, volume),
+    names_sep = "_"
+  ) |>
+  rename_with(
+    ~ c("price_prev", "price_curr", "volume_prev", "volume_curr"),
+    .cols = c(
+      paste0("close_price_", previous_date),
+      paste0("close_price_", current_date),
+      paste0("volume_", previous_date),
+      paste0("volume_", current_date)
+    )
+  ) |>
+  filter(!is.na(price_prev) & !is.na(price_curr)) |>
+  mutate(
+    percent_change = 100 * (price_curr - price_prev) / price_prev
+  ) |>
+  arrange(desc(percent_change))
+
+# Results
+top_10 <- head(pivot_df, 10)
+bottom_10 <- tail(pivot_df, 10)
+
+# Combine for output
+result <- bind_rows(
+  top_10 |> mutate(rank_group = "Top 10 Gainers"),
+  bottom_10 |> mutate(rank_group = "Bottom 10 Losers")
+) |>
+  select(rank_group, ticker, price_prev, price_curr, percent_change, volume_prev, volume_curr)
+
+rm(df, pivot_df); gc()
+
+print(result)
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+spacer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
