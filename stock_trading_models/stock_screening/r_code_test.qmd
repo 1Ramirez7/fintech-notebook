@@ -3,6 +3,35 @@ title: "r_code"
 format: html
 ---
 
+
+information
+
+
+```{r}
+# Load libraries
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(googledrive, readr, dplyr)
+
+# Authenticate Google Drive
+if (!drive_has_token()) drive_auth()
+
+# Load and download the file
+file <- drive_get(path = "stock_data/fact_close_price.csv")
+temp_path <- tempfile(fileext = ".csv")
+drive_download(file, path = temp_path, overwrite = TRUE)
+
+# Read only first few rows to infer types
+df <- read_csv(temp_path, n_max = 100)
+
+# Display column names and data types
+glimpse(df)
+
+
+```
+
+
+
+
 **Plot stock time series price**
 
 ```{r}
@@ -11,9 +40,9 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(googledrive, readr, dplyr, ggplot2, lubridate)
 
 # ── PARAMETERS ─────────────────────────────────────────────
-ticker <- "CVU"
-date_start <- as.Date("2024-06-03")
-date_end <- as.Date("2025-06-28")
+ticker <- "CARM"
+date_start <- as.Date("2025-06-10")
+date_end <- as.Date("2025-06-21")
 # ───────────────────────────────────────────────────────────
 
 # load google drive file
@@ -64,13 +93,21 @@ ggplot(df, aes(x = date, y = close_price)) +
 ```
 
 
+This code returns the top and bottom percent change difference
+
+- from fact_close_price - Includes: ticker_id, ticker, date, close_price, volume
+- from index_main - Includes: ticker_id, sector, industry
+- joins sector and industry to the pivot_df using ticker_id
+
+
+
 ```{r}
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(googledrive, readr, dplyr, lubridate, tidyr)
 
 # ── PARAMETERS ─────────────────────────────────────────────
-previous_date <- as.Date("2025-06-16")
-current_date  <- as.Date("2025-06-17")
+previous_date <- as.Date("2025-06-17")
+current_date  <- as.Date("2025-06-18")
 # ───────────────────────────────────────────────────────────
 
 # Authenticate
@@ -81,10 +118,11 @@ file <- drive_get(path = "stock_data/fact_close_price.csv")
 temp_path <- tempfile(fileext = ".csv")
 drive_download(file, path = temp_path, overwrite = TRUE)
 
-# Read relevant columns
+# select columns to read from fact_close_price (1 of 2)
 df <- read_csv(
   file = temp_path,
   col_types = cols_only(
+    ticker_id = col_double(),
     ticker = col_character(),
     date = col_character(),
     close_price = col_double(),
@@ -93,7 +131,7 @@ df <- read_csv(
 ) |>
   mutate(date = as.Date(date)) |>
   filter(date %in% c(previous_date, current_date)) |>
-  select(ticker, date, close_price, volume)
+  select(ticker_id, ticker, date, close_price, volume) # select columns to include from fact_close_price (2 of 2)
 
 # Pivot and calculate % change
 pivot_df <- df |>
@@ -117,22 +155,28 @@ pivot_df <- df |>
   ) |>
   arrange(desc(percent_change))
 
+# Add sector from index_main.csv
+index_df <- read_csv("https://raw.githubusercontent.com/1Ramirez7/fintech-notebook/refs/heads/main/stock_trading_models/stock_screening/sql/index_main.csv") |>
+  select(ticker_id, sector, industry) # select columns to join from index_main to pivot_df (sector, idustry, etc)
+pivot_df <- pivot_df |> # join to pivo_df
+  left_join(index_df, by = "ticker_id") # make sure to add variable to result select.
+
 # Results
 top_10 <- head(pivot_df, 10)
 bottom_10 <- tail(pivot_df, 10)
 
 # Combine for output
 result <- bind_rows(
-  top_10 |> mutate(rank_group = "Top 10 Gainers"),
-  bottom_10 |> mutate(rank_group = "Bottom 10 Losers")
+  top_10 |> mutate(rank_group = "Top 10"),
+  bottom_10 |> mutate(rank_group = "Bottom 10")
 ) |>
-  select(rank_group, ticker, price_prev, price_curr, percent_change, volume_prev, volume_curr)
+  select(rank_group, ticker, price_prev, price_curr, percent_change, volume_prev, volume_curr, sector, industry)
 
-rm(df, pivot_df); gc()
+rm(df, pivot_df, index_df); gc()
 
 print(result)
 
-
+# I just thought of doing a time series plot for volume to see if i notice random spikes before large spikes in price
 
 ```
 

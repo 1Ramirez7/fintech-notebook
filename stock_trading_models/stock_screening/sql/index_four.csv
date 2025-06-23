@@ -1,0 +1,528 @@
+ticker_id,ticker,ticker-full,short-name,sector_id,sector,industry_id,industry
+2177,ARCB,ARCB US Equity,ARCBEST CORP,7,Industrials,29,Ground Transportation
+2178,BTOC,BTOC US Equity,ARMLOGI HOLDING,7,Industrials,29,Ground Transportation
+2179,CAR,CAR US Equity,AVIS BUDGET GROU,7,Industrials,29,Ground Transportation
+2180,CSX,CSX US Equity,CSX CORP,7,Industrials,29,Ground Transportation
+2181,CVLG,CVLG US Equity,COVENANT LOGISTI,7,Industrials,29,Ground Transportation
+2182,HTLD,HTLD US Equity,HEARTLAND EXPRES,7,Industrials,29,Ground Transportation
+2183,HTZ,HTZ US Equity,HERTZ GLOBAL HLD,7,Industrials,29,Ground Transportation
+2184,JBHT,JBHT US Equity,HUNT (JB) TRANS,7,Industrials,29,Ground Transportation
+2185,KNX,KNX US Equity,KNIGHT-SWIFT TRA,7,Industrials,29,Ground Transportation
+2186,LSTR,LSTR US Equity,LANDSTAR SYSTEM,7,Industrials,29,Ground Transportation
+2187,LYFT,LYFT US Equity,LYFT INC-A,7,Industrials,29,Ground Transportation
+2188,MRTN,MRTN US Equity,MARTEN TRANSPORT,7,Industrials,29,Ground Transportation
+2189,NSC,NSC US Equity,NORFOLK SOUTHERN,7,Industrials,29,Ground Transportation
+2190,ODFL,ODFL US Equity,OLD DOMINION FRT,7,Industrials,29,Ground Transportation
+2191,PAL,PAL US Equity,PROFICIENT AUTO,7,Industrials,29,Ground Transportation
+2192,PAMT,PAMT US Equity,PAMT CORP,7,Industrials,29,Ground Transportation
+2193,R,R US Equity,RYDER SYSTEM INC,7,Industrials,29,Ground Transportation
+2194,RXO,RXO US Equity,RXO INC,7,Industrials,29,Ground Transportation
+2195,SAIA,SAIA US Equity,SAIA INC,7,Industrials,29,Ground Transportation
+2196,SNDR,SNDR US Equity,SCHNEIDER NATL-B,7,Industrials,29,Ground Transportation
+2197,TOPP,TOPP US Equity,TOPPOINT HOLDING,7,Industrials,29,Ground Transportation
+2198,UBER,UBER US Equity,UBER TECHNOLOGIE,7,Industrials,29,Ground Transportation
+2199,UHAL,UHAL US Equity,U-HAUL HOLDING C,7,Industrials,29,Ground Transportation
+2200,UHAL/B,UHAL/B US Equity,U-HAUL HOLDING C,7,Industrials,29,Ground Transportation
+2201,ULH,ULH US Equity,UNIVERSAL LOGIST,7,Industrials,29,Ground Transportation
+2202,UNP,UNP US Equity,UNION PAC CORP,7,Industrials,29,Ground Transportation
+2203,WERN,WERN US Equity,WERNER ENT,7,Industrials,29,Ground Transportation
+2204,XPO,XPO US Equity,XPO INC,7,Industrials,29,Ground Transportation
+2205,HON,HON US Equity,HONEYWELL INTL,7,Industrials,39,Industrial Conglomerates
+2206,MMM,MMM US Equity,3M CO,7,Industrials,39,Industrial Conglomerates
+2207,AGCO,AGCO US Equity,AGCO CORP,7,Industrials,44,Machinery
+2208,AGFY,AGFY US Equity,AGRIFY CORP,7,Industrials,44,Machinery
+2209,AIN,AIN US Equity,ALBANY INTL CORP,7,Industrials,44,Machinery
+2210,AIRJ,AIRJ US Equity,AIRJOULE TECHNOL,7,Industrials,44,Machinery
+2211,ALG,ALG US Equity,ALAMO GROUP,7,Industrials,44,Machinery
+2212,ALSN,ALSN US Equity,ALLISON TRANSMIS,7,Industrials,44,Machinery
+2213,ARTW,ARTW US Equity,ART'S-WAY MANUFA,7,Industrials,44,Machinery
+2214,ASTE,ASTE US Equity,ASTEC INDUSTRIES,7,Industrials,44,Machinery
+2215,ATMU,ATMU US Equity,ATMUS FILTRATION,7,Industrials,44,Machinery
+2216,BLBD,BLBD US Equity,BLUE BIRD CORP,7,Industrials,44,Machinery
+2217,BURU,BURU US Equity,NUBURU INC,7,Industrials,44,Machinery
+2218,CAT,CAT US Equity,CATERPILLAR INC,7,Industrials,44,Machinery
+2219,CLIR,CLIR US Equity,CLEARSIGN TECHNO,7,Industrials,44,Machinery
+2220,CMCO,CMCO US Equity,COLUMBUS MCKI/NY,7,Industrials,44,Machinery
+2221,CMI,CMI US Equity,CUMMINS INC,7,Industrials,44,Machinery
+2222,CR,CR US Equity,CRANE CO,7,Industrials,44,Machinery
+2223,CVGI,CVGI US Equity,COMMERCIAL VEHIC,7,Industrials,44,Machinery
+2224,CVR,CVR US Equity,CHICAGO RIVET,7,Industrials,44,Machinery
+2225,DCI,DCI US Equity,DONALDSON CO INC,7,Industrials,44,Machinery
+2226,DDD,DDD US Equity,3D SYSTEMS CORP,7,Industrials,44,Machinery
+2227,DE,DE US Equity,DEERE & CO,7,Industrials,44,Machinery
+2228,DOV,DOV US Equity,DOVER CORP,7,Industrials,44,Machinery
+2229,EML,EML US Equity,EASTERN CO,7,Industrials,44,Machinery
+2230,EPAC,EPAC US Equity,ENERPAC TOOL GRO,7,Industrials,44,Machinery
+2231,ERII,ERII US Equity,ENERGY RECOVERY,7,Industrials,44,Machinery
+2232,ESAB,ESAB US Equity,ESAB CORP,7,Industrials,44,Machinery
+2233,ESE,ESE US Equity,ESCO TECH INC,7,Industrials,44,Machinery
+2234,FELE,FELE US Equity,FRANKLIN ELEC CO,7,Industrials,44,Machinery
+2235,FLS,FLS US Equity,FLOWSERVE CORP,7,Industrials,44,Machinery
+2236,FSS,FSS US Equity,FED SIGNAL CORP,7,Industrials,44,Machinery
+2237,FSTR,FSTR US Equity,FOSTER (LB) CO-A,7,Industrials,44,Machinery
+2238,FTV,FTV US Equity,FORTIVE CORP,7,Industrials,44,Machinery
+2239,GBX,GBX US Equity,GREENBRIER COS,7,Industrials,44,Machinery
+2240,GENC,GENC US Equity,GENCOR INDS INC,7,Industrials,44,Machinery
+2241,GGG,GGG US Equity,GRACO INC,7,Industrials,44,Machinery
+2242,GHM,GHM US Equity,GRAHAM CORP,7,Industrials,44,Machinery
+2243,GRC,GRC US Equity,GORMAN-RUPP CO,7,Industrials,44,Machinery
+2244,GTEC,GTEC US Equity,GREENLAND TECHNO,7,Industrials,44,Machinery
+2245,GTES,GTES US Equity,GATES INDUSTRIAL,7,Industrials,44,Machinery
+2246,GTLS,GTLS US Equity,CHART INDUSTRIES,7,Industrials,44,Machinery
+2247,HI,HI US Equity,HILLENBRAND INC,7,Industrials,44,Machinery
+2248,HLIO,HLIO US Equity,HELIOS TECHNOLOG,7,Industrials,44,Machinery
+2249,HLMN,HLMN US Equity,HILLMAN SOLUTION,7,Industrials,44,Machinery
+2250,HURC,HURC US Equity,HURCO COMPANIES,7,Industrials,44,Machinery
+2251,HY,HY US Equity,HYSTER-YALE INC,7,Industrials,44,Machinery
+2252,HYFM,HYFM US Equity,HYDROFARM HOLDIN,7,Industrials,44,Machinery
+2253,IEX,IEX US Equity,IDEX CORP,7,Industrials,44,Machinery
+2254,IR,IR US Equity,INGERSOLL-RAND I,7,Industrials,44,Machinery
+2255,ITT,ITT US Equity,ITT INC,7,Industrials,44,Machinery
+2256,ITW,ITW US Equity,ILLINOIS TOOL WO,7,Industrials,44,Machinery
+2257,JBTM,JBTM US Equity,JBT MAREL CORP,7,Industrials,44,Machinery
+2258,KAI,KAI US Equity,KADANT INC,7,Industrials,44,Machinery
+2259,KITT,KITT US Equity,NAUTICUS ROBOTIC,7,Industrials,44,Machinery
+2260,KMT,KMT US Equity,KENNAMETAL INC,7,Industrials,44,Machinery
+2261,LASE,LASE US Equity,LASER PHOTONICS,7,Industrials,44,Machinery
+2262,LECO,LECO US Equity,LINCOLN ELECTRIC,7,Industrials,44,Machinery
+2263,LNN,LNN US Equity,LINDSAY CORP,7,Industrials,44,Machinery
+2264,LXFR,LXFR US Equity,LUXFER HOLDINGS,7,Industrials,44,Machinery
+2265,MEC,MEC US Equity,MAYVILLE ENGINEE,7,Industrials,44,Machinery
+2266,MIDD,MIDD US Equity,MIDDLEBY CORP,7,Industrials,44,Machinery
+2267,MLI,MLI US Equity,MUELLER INDS,7,Industrials,44,Machinery
+2268,MLR,MLR US Equity,MILLER INDS/TENN,7,Industrials,44,Machinery
+2269,MTW,MTW US Equity,MANITOWOC CO,7,Industrials,44,Machinery
+2270,MVST,MVST US Equity,MICROVAST HOLDIN,7,Industrials,44,Machinery
+2271,MWA,MWA US Equity,MUELLER WATER-A,7,Industrials,44,Machinery
+2272,NDSN,NDSN US Equity,NORDSON CORP,7,Industrials,44,Machinery
+2273,NEPH,NEPH US Equity,NEPHROS INC,7,Industrials,44,Machinery
+2274,NNBR,NNBR US Equity,NN INC,7,Industrials,44,Machinery
+2275,NPO,NPO US Equity,ENPRO INC,7,Industrials,44,Machinery
+2276,OFLX,OFLX US Equity,OMEGA FLEX INC,7,Industrials,44,Machinery
+2277,OSK,OSK US Equity,OSHKOSH CORP,7,Industrials,44,Machinery
+2278,OTIS,OTIS US Equity,OTIS WORLDWI,7,Industrials,44,Machinery
+2279,PCAR,PCAR US Equity,PACCAR INC,7,Industrials,44,Machinery
+2280,PDYN,PDYN US Equity,PALLADYNE AI COR,7,Industrials,44,Machinery
+2281,PH,PH US Equity,PARKER HANNIFIN,7,Industrials,44,Machinery
+2282,PKOH,PKOH US Equity,PARK OHIO HLDGS,7,Industrials,44,Machinery
+2283,PLOW,PLOW US Equity,DOUGLAS DYNAMICS,7,Industrials,44,Machinery
+2284,PPIH,PPIH US Equity,PERMA-PIPE INTER,7,Industrials,44,Machinery
+2285,PRLB,PRLB US Equity,PROTO LABS INC,7,Industrials,44,Machinery
+2286,RAIL,RAIL US Equity,FREIGHTCAR AMERI,7,Industrials,44,Machinery
+2287,RAIN,RAIN US Equity,RAIN ENHANC-CL A,7,Industrials,44,Machinery
+2288,RBC,RBC US Equity,RBC BEARINGS INC,7,Industrials,44,Machinery
+2289,REVG,REVG US Equity,REV GROUP INC,7,Industrials,44,Machinery
+2290,RR,RR US Equity,RICHTECH ROBOT-B,7,Industrials,44,Machinery
+2291,SCWO,SCWO US Equity,374WATER INC,7,Industrials,44,Machinery
+2292,SHYF,SHYF US Equity,SHYFT GROUP INC/,7,Industrials,44,Machinery
+2293,SNA,SNA US Equity,SNAP-ON INC,7,Industrials,44,Machinery
+2294,SPXC,SPXC US Equity,SPX TECHNOLOGIES,7,Industrials,44,Machinery
+2295,SSYS,SSYS US Equity,STRATASYS LTD,7,Industrials,44,Machinery
+2296,SWK,SWK US Equity,STANLEY BLACK &,7,Industrials,44,Machinery
+2297,SXI,SXI US Equity,STANDEX INTL CO,7,Industrials,44,Machinery
+2298,SYM,SYM US Equity,SYMBOTIC INC,7,Industrials,44,Machinery
+2299,TAYD,TAYD US Equity,TAYLOR DEVICES,7,Industrials,44,Machinery
+2300,TEX,TEX US Equity,TEREX CORP,7,Industrials,44,Machinery
+2301,TKR,TKR US Equity,TIMKEN CO,7,Industrials,44,Machinery
+2302,TNC,TNC US Equity,TENNANT CO,7,Industrials,44,Machinery
+2303,TPCS,TPCS US Equity,TECHPRECISION CO,7,Industrials,44,Machinery
+2304,TRN,TRN US Equity,TRINITY INDUSTRI,7,Industrials,44,Machinery
+2305,TTC,TTC US Equity,TORO CO,7,Industrials,44,Machinery
+2306,TWI,TWI US Equity,TITAN INTL INC,7,Industrials,44,Machinery
+2307,TWIN,TWIN US Equity,TWIN DISC INC,7,Industrials,44,Machinery
+2308,UAVS,UAVS US Equity,AGEAGLE AERIAL S,7,Industrials,44,Machinery
+2309,UGRO,UGRO US Equity,URBAN-GRO INC,7,Industrials,44,Machinery
+2310,WAB,WAB US Equity,WABTEC CORP,7,Industrials,44,Machinery
+2311,WNC,WNC US Equity,WABASH NATIONAL,7,Industrials,44,Machinery
+2312,WOR,WOR US Equity,WORTHINGTON ENTE,7,Industrials,44,Machinery
+2313,WTS,WTS US Equity,WATTS WATER TE-A,7,Industrials,44,Machinery
+2314,XOS,XOS US Equity,XOS INC,7,Industrials,44,Machinery
+2315,XYL,XYL US Equity,XYLEM INC,7,Industrials,44,Machinery
+2316,ZONE,ZONE US Equity,CLEANCORE S-CL B,7,Industrials,44,Machinery
+2317,CISS,CISS US Equity,C3IS INC,7,Industrials,45,Marine Transportation
+2318,GNK,GNK US Equity,GENCO SHIPPING &,7,Industrials,45,Marine Transportation
+2319,KEX,KEX US Equity,KIRBY CORP,7,Industrials,45,Marine Transportation
+2320,LSH,LSH US Equity,LAKESIDE HOLDING,7,Industrials,45,Marine Transportation
+2321,MATX,MATX US Equity,MATSON INC,7,Industrials,45,Marine Transportation
+2322,PANL,PANL US Equity,PANGAEA LOGISTIC,7,Industrials,45,Marine Transportation
+2323,AAL,AAL US Equity,AMERICAN AIRLINE,7,Industrials,51,Passenger Airlines
+2324,ALGT,ALGT US Equity,ALLEGIANT TRAVEL,7,Industrials,51,Passenger Airlines
+2325,ALK,ALK US Equity,ALASKA AIR GROUP,7,Industrials,51,Passenger Airlines
+2326,BLDE,BLDE US Equity,BLADE AIR MOBILI,7,Industrials,51,Passenger Airlines
+2327,DAL,DAL US Equity,DELTA AIR LI,7,Industrials,51,Passenger Airlines
+2328,FLYX,FLYX US Equity,FLYEXCLUSIVE INC,7,Industrials,51,Passenger Airlines
+2329,FLYY,FLYY US Equity,SPIRIT AVIATION,7,Industrials,51,Passenger Airlines
+2330,JBLU,JBLU US Equity,JETBLUE AIRWAYS,7,Industrials,51,Passenger Airlines
+2331,JOBY,JOBY US Equity,JOBY AVIATION IN,7,Industrials,51,Passenger Airlines
+2332,JTAI,JTAI US Equity,JET.AI INC,7,Industrials,51,Passenger Airlines
+2333,LUV,LUV US Equity,SOUTHWEST AIR,7,Industrials,51,Passenger Airlines
+2334,MESA,MESA US Equity,MESA AIR GROUP,7,Industrials,51,Passenger Airlines
+2335,SKYW,SKYW US Equity,SKYWEST INC,7,Industrials,51,Passenger Airlines
+2336,SNCY,SNCY US Equity,SUN COUNTRY HOLD,7,Industrials,51,Passenger Airlines
+2337,SOAR,SOAR US Equity,VOLATO GROUP INC,7,Industrials,51,Passenger Airlines
+2338,SRFM,SRFM US Equity,SURF AIR MOBILIT,7,Industrials,51,Passenger Airlines
+2339,UAL,UAL US Equity,UNITED AIRLINES,7,Industrials,51,Passenger Airlines
+2340,ULCC,ULCC US Equity,FRONTIER GROUP H,7,Industrials,51,Passenger Airlines
+2341,UP,UP US Equity,WHEELS UP EXPERI,7,Industrials,51,Passenger Airlines
+2342,ADP,ADP US Equity,AUTOMATIC DATA,7,Industrials,54,Professional Services
+2343,AERT,AERT US Equity,AERIES TECHNOLOG,7,Industrials,54,Professional Services
+2344,ALIT,ALIT US Equity,ALIGHT INC-CL A,7,Industrials,54,Professional Services
+2345,AMTM,AMTM US Equity,AMENTUM HOLDINGS,7,Industrials,54,Professional Services
+2346,ASUR,ASUR US Equity,ASURE SOFTWARE I,7,Industrials,54,Professional Services
+2347,BAH,BAH US Equity,BOOZ ALLEN HAMIL,7,Industrials,54,Professional Services
+2348,BBSI,BBSI US Equity,BARRETT BUS SVCS,7,Industrials,54,Professional Services
+2349,BGSF,BGSF US Equity,BGSF INC,7,Industrials,54,Professional Services
+2350,BKSY,BKSY US Equity,BLACKSKY TECHNOL,7,Industrials,54,Professional Services
+2351,CACI,CACI US Equity,CACI INTL-A,7,Industrials,54,Professional Services
+2352,CBZ,CBZ US Equity,CBIZ INC,7,Industrials,54,Professional Services
+2353,CNDT,CNDT US Equity,CONDUENT INC,7,Industrials,54,Professional Services
+2354,CNXC,CNXC US Equity,CONCENTRIX CORP,7,Industrials,54,Professional Services
+2355,CRAI,CRAI US Equity,CRA INTERNATIONA,7,Industrials,54,Professional Services
+2356,CSGS,CSGS US Equity,CSG SYSTEMS INTL,7,Industrials,54,Professional Services
+2357,DAY,DAY US Equity,DAYFORCE INC,7,Industrials,54,Professional Services
+2358,DLHC,DLHC US Equity,DLH HOLDINGS COR,7,Industrials,54,Professional Services
+2359,EXLS,EXLS US Equity,EXLSERVICE HOLDI,7,Industrials,54,Professional Services
+2360,EXPO,EXPO US Equity,EXPONENT INC,7,Industrials,54,Professional Services
+2361,FA,FA US Equity,FIRST ADVANTAGE,7,Industrials,54,Professional Services
+2362,FBYD,FBYD US Equity,FALCON'S BEYOND,7,Industrials,54,Professional Services
+2363,FC,FC US Equity,FRANKLIN COVEY,7,Industrials,54,Professional Services
+2364,FCN,FCN US Equity,FTI CONSULTING,7,Industrials,54,Professional Services
+2365,FORR,FORR US Equity,FORRESTER RESEAR,7,Industrials,54,Professional Services
+2366,G,G US Equity,GENPACT LTD,7,Industrials,54,Professional Services
+2367,HQI,HQI US Equity,HIREQUEST INC,7,Industrials,54,Professional Services
+2368,HSII,HSII US Equity,HEIDRICK & STRUG,7,Industrials,54,Professional Services
+2369,HSON,HSON US Equity,HUDSON GLOBAL IN,7,Industrials,54,Professional Services
+2370,HURN,HURN US Equity,HURON CONSULTING,7,Industrials,54,Professional Services
+2371,IBEX,IBEX US Equity,IBEX LTD,7,Industrials,54,Professional Services
+2372,ICFI,ICFI US Equity,ICF INTERNATIONA,7,Industrials,54,Professional Services
+2373,INOD,INOD US Equity,INNODATA INC,7,Industrials,54,Professional Services
+2374,IPDN,IPDN US Equity,PROFESSIONAL DIV,7,Industrials,54,Professional Services
+2375,J,J US Equity,JACOBS SOLUTIONS,7,Industrials,54,Professional Services
+2376,JOB,JOB US Equity,GEE GROUP INC,7,Industrials,54,Professional Services
+2377,KBR,KBR US Equity,KBR INC,7,Industrials,54,Professional Services
+2378,KELYA,KELYA US Equity,KELLY SERVICES-A,7,Industrials,54,Professional Services
+2379,KELYB,KELYB US Equity,KELLY SERVICES-B,7,Industrials,54,Professional Services
+2380,KFRC,KFRC US Equity,KFORCE INC,7,Industrials,54,Professional Services
+2381,KFY,KFY US Equity,KORN FERRY,7,Industrials,54,Professional Services
+2382,LDOS,LDOS US Equity,LEIDOS HOLDINGS,7,Industrials,54,Professional Services
+2383,LZ,LZ US Equity,LEGALZOOMCOM INC,7,Industrials,54,Professional Services
+2384,MAN,MAN US Equity,MANPOWERGROUP IN,7,Industrials,54,Professional Services
+2385,MG,MG US Equity,MISTRAS GROUP IN,7,Industrials,54,Professional Services
+2386,MHH,MHH US Equity,MASTECH DIGITAL,7,Industrials,54,Professional Services
+2387,MMS,MMS US Equity,MAXIMUS INC,7,Industrials,54,Professional Services
+2388,NIXX,NIXX US Equity,NIXXY INC,7,Industrials,54,Professional Services
+2389,NOTE,NOTE US Equity,FISCALNOTE HOLDI,7,Industrials,54,Professional Services
+2390,NSP,NSP US Equity,INSPERITY INC,7,Industrials,54,Professional Services
+2391,NVEE,NVEE US Equity,NV5 GLOBAL INC,7,Industrials,54,Professional Services
+2392,PAYC,PAYC US Equity,PAYCOM SOFTWARE,7,Industrials,54,Professional Services
+2393,PAYX,PAYX US Equity,PAYCHEX INC,7,Industrials,54,Professional Services
+2394,PCTY,PCTY US Equity,PAYLOCITY HOLDIN,7,Industrials,54,Professional Services
+2395,PL,PL US Equity,PLANET LABS PBC,7,Industrials,54,Professional Services
+2396,PSN,PSN US Equity,PARSONS CORP,7,Industrials,54,Professional Services
+2397,RCMT,RCMT US Equity,RCM TECH INC,7,Industrials,54,Professional Services
+2398,RGP,RGP US Equity,RESOURCES CONNEC,7,Industrials,54,Professional Services
+2399,RHI,RHI US Equity,ROBERT HALF INC,7,Industrials,54,Professional Services
+2400,SAIC,SAIC US Equity,SCIENCE APPLICAT,7,Industrials,54,Professional Services
+2401,SKIL,SKIL US Equity,SKILLSOFT CORP,7,Industrials,54,Professional Services
+2402,SPIR,SPIR US Equity,SPIRE GLOBAL INC,7,Industrials,54,Professional Services
+2403,SSNC,SSNC US Equity,SS&C TECHNOLOGIE,7,Industrials,54,Professional Services
+2404,TASK,TASK US Equity,TASKUS INC-A,7,Industrials,54,Professional Services
+2405,TBI,TBI US Equity,TRUEBLUE INC,7,Industrials,54,Professional Services
+2406,TIC,TIC US Equity,ACUREN CORPORATI,7,Industrials,54,Professional Services
+2407,TNET,TNET US Equity,TRINET GROUP INC,7,Industrials,54,Professional Services
+2408,TTEC,TTEC US Equity,TTEC HOLDINGS IN,7,Industrials,54,Professional Services
+2409,ULS,ULS US Equity,UL SOLUTIONS I-A,7,Industrials,54,Professional Services
+2410,UPWK,UPWK US Equity,UPWORK INC,7,Industrials,54,Professional Services
+2411,VRRM,VRRM US Equity,VERRA MOBILITY C,7,Industrials,54,Professional Services
+2412,WFCF,WFCF US Equity,WHERE FOOD COMES,7,Industrials,54,Professional Services
+2413,WLDN,WLDN US Equity,WILLDAN GROUP IN,7,Industrials,54,Professional Services
+2414,AIT,AIT US Equity,APPLIED INDU TEC,7,Industrials,62,Trading Companies & Distributors
+2415,ALTG,ALTG US Equity,ALTA EQUIPMENT G,7,Industrials,62,Trading Companies & Distributors
+2416,BCC,BCC US Equity,BOISE CASCADE CO,7,Industrials,62,Trading Companies & Distributors
+2417,BXC,BXC US Equity,BLUELINX HOLDING,7,Industrials,62,Trading Companies & Distributors
+2418,CAPS,CAPS US Equity,CAPSTONE HOLDING,7,Industrials,62,Trading Companies & Distributors
+2419,CNM,CNM US Equity,CORE & MAIN IN-A,7,Industrials,62,Trading Companies & Distributors
+2420,CTOS,CTOS US Equity,CUSTOM TRUCK ONE,7,Industrials,62,Trading Companies & Distributors
+2421,DNOW,DNOW US Equity,DNOW INC,7,Industrials,62,Trading Companies & Distributors
+2422,DSGR,DSGR US Equity,DISTRIBUTION SOL,7,Industrials,62,Trading Companies & Distributors
+2423,DXPE,DXPE US Equity,DXP ENTERPRISES,7,Industrials,62,Trading Companies & Distributors
+2424,EVI,EVI US Equity,EVI INDUSTRIES I,7,Industrials,62,Trading Companies & Distributors
+2425,FAST,FAST US Equity,FASTENAL CO,7,Industrials,62,Trading Companies & Distributors
+2426,FERG,FERG US Equity,FERGUSON ENTERPR,7,Industrials,62,Trading Companies & Distributors
+2427,FGI,FGI US Equity,FGI INDUSTRIES,7,Industrials,62,Trading Companies & Distributors
+2428,FTAI,FTAI US Equity,FTAI AVIATION LT,7,Industrials,62,Trading Companies & Distributors
+2429,GIC,GIC US Equity,GLOBAL INDUSTRIA,7,Industrials,62,Trading Companies & Distributors
+2430,GMS,GMS US Equity,GMS INC,7,Industrials,62,Trading Companies & Distributors
+2431,GWW,GWW US Equity,WW GRAINGER INC,7,Industrials,62,Trading Companies & Distributors
+2432,HDSN,HDSN US Equity,HUDSON TECH,7,Industrials,62,Trading Companies & Distributors
+2433,HRI,HRI US Equity,HERC HOLDINGS IN,7,Industrials,62,Trading Companies & Distributors
+2434,IPW,IPW US Equity,IPOWER INC,7,Industrials,62,Trading Companies & Distributors
+2435,KRT,KRT US Equity,KARAT PACKAGING,7,Industrials,62,Trading Companies & Distributors
+2436,MRC,MRC US Equity,MRC GLOBAL INC,7,Industrials,62,Trading Companies & Distributors
+2437,MSM,MSM US Equity,MSC INDL DIRECT,7,Industrials,62,Trading Companies & Distributors
+2438,MWYN,MWYN US Equity,MARWYNN HOLDINGS,7,Industrials,62,Trading Companies & Distributors
+2439,NPKI,NPKI US Equity,NPK INTERNATIONA,7,Industrials,62,Trading Companies & Distributors
+2440,QXO,QXO US Equity,QXO INC,7,Industrials,62,Trading Companies & Distributors
+2441,RUSHA,RUSHA US Equity,RUSH ENTER-CL A,7,Industrials,62,Trading Companies & Distributors
+2442,RUSHB,RUSHB US Equity,RUSH ENTER-CL B,7,Industrials,62,Trading Companies & Distributors
+2443,SITE,SITE US Equity,SITEONE LANDSCAP,7,Industrials,62,Trading Companies & Distributors
+2444,TITN,TITN US Equity,TITAN MACHINERY,7,Industrials,62,Trading Companies & Distributors
+2445,TRNS,TRNS US Equity,TRANSCAT INC,7,Industrials,62,Trading Companies & Distributors
+2446,URI,URI US Equity,UNITED RENTALS,7,Industrials,62,Trading Companies & Distributors
+2447,WCC,WCC US Equity,WESCO INTL,7,Industrials,62,Trading Companies & Distributors
+2448,WSO,WSO US Equity,WATSCO INC,7,Industrials,62,Trading Companies & Distributors
+2449,WSO/B,WSO/B US Equity,WATSCO INC -B,7,Industrials,62,Trading Companies & Distributors
+2450,XMTR,XMTR US Equity,XOMETRY INC-A,7,Industrials,62,Trading Companies & Distributors
+2451,SGLY,SGLY US Equity,SINGULARITY FUTU,7,Industrials,63,Transportation Infrastructure
+2452,AAOI,AAOI US Equity,APPLIED OPTOELEC,8,Information Technology,12,Communications Equipment
+2453,ADTN,ADTN US Equity,ADTRAN HOLDINGS,8,Information Technology,12,Communications Equipment
+2454,ANET,ANET US Equity,ARISTA NETWORKS,8,Information Technology,12,Communications Equipment
+2455,ASNS,ASNS US Equity,ACTELIS NETWORKS,8,Information Technology,12,Communications Equipment
+2456,AVNW,AVNW US Equity,AVIAT NETWORKS I,8,Information Technology,12,Communications Equipment
+2457,BKTI,BKTI US Equity,BK TECHNOLOGIES,8,Information Technology,12,Communications Equipment
+2458,CALX,CALX US Equity,CALIX INC,8,Information Technology,12,Communications Equipment
+2459,CIEN,CIEN US Equity,CIENA CORP,8,Information Technology,12,Communications Equipment
+2460,CLFD,CLFD US Equity,CLEARFIELD INC,8,Information Technology,12,Communications Equipment
+2461,CLRO,CLRO US Equity,CLEARONE INC,8,Information Technology,12,Communications Equipment
+2462,CMBM,CMBM US Equity,CAMBIUM NETWORKS,8,Information Technology,12,Communications Equipment
+2463,CMTL,CMTL US Equity,COMTECH TELECOMM,8,Information Technology,12,Communications Equipment
+2464,COMM,COMM US Equity,COMMSCOPE HOLDIN,8,Information Technology,12,Communications Equipment
+2465,CSCO,CSCO US Equity,CISCO SYSTEMS,8,Information Technology,12,Communications Equipment
+2466,DGII,DGII US Equity,DIGI INTL INC,8,Information Technology,12,Communications Equipment
+2467,EXTR,EXTR US Equity,EXTREME NETWORKS,8,Information Technology,12,Communications Equipment
+2468,FFIV,FFIV US Equity,F5 INC,8,Information Technology,12,Communications Equipment
+2469,FKWL,FKWL US Equity,FRANKLIN WIRELES,8,Information Technology,12,Communications Equipment
+2470,GNSS,GNSS US Equity,GENASYS INC,8,Information Technology,12,Communications Equipment
+2471,HLIT,HLIT US Equity,HARMONIC INC,8,Information Technology,12,Communications Equipment
+2472,INSG,INSG US Equity,INSEEGO CORP,8,Information Technology,12,Communications Equipment
+2473,JNPR,JNPR US Equity,JUNIPER NETWORKS,8,Information Technology,12,Communications Equipment
+2474,KVHI,KVHI US Equity,KVH INDUSTRIES,8,Information Technology,12,Communications Equipment
+2475,LITE,LITE US Equity,LUMENTUM HOL,8,Information Technology,12,Communications Equipment
+2476,LTRX,LTRX US Equity,LANTRONIX INC,8,Information Technology,12,Communications Equipment
+2477,MINM,MINM US Equity,MINIM INC,8,Information Technology,12,Communications Equipment
+2478,MSI,MSI US Equity,MOTOROLA SOLUTIO,8,Information Technology,12,Communications Equipment
+2479,NTCT,NTCT US Equity,NETSCOUT SYSTEMS,8,Information Technology,12,Communications Equipment
+2480,NTGR,NTGR US Equity,NETGEAR INC,8,Information Technology,12,Communications Equipment
+2481,NTIP,NTIP US Equity,NETWORK-1 TECHNO,8,Information Technology,12,Communications Equipment
+2482,OCC,OCC US Equity,OPTICAL CABLE,8,Information Technology,12,Communications Equipment
+2483,ONDS,ONDS US Equity,ONDAS HOLDINGS I,8,Information Technology,12,Communications Equipment
+2484,RBBN,RBBN US Equity,RIBBON COMMUNICA,8,Information Technology,12,Communications Equipment
+2485,UI,UI US Equity,UBIQUITI INC,8,Information Technology,12,Communications Equipment
+2486,VIAV,VIAV US Equity,VIAVI SOLUTIONS,8,Information Technology,12,Communications Equipment
+2487,VSAT,VSAT US Equity,VIASAT INC,8,Information Technology,12,Communications Equipment
+2488,AEIS,AEIS US Equity,ADV ENERGY INDS,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2489,AEVA,AEVA US Equity,AEVA TECHNOLOGIE,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2490,AEVAW,AEVAW US Equity,INTERPRIVA -CW24,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2491,AIOT,AIOT US Equity,POWERFLEET INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2492,AIRG,AIRG US Equity,AIRGAIN INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2493,AMPG,AMPG US Equity,AMPLITECH GROUP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2494,APH,APH US Equity,AMPHENOL CORP-A,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2495,ARLO,ARLO US Equity,ARLO TECHNOLOGIE,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2496,ARW,ARW US Equity,ARROW ELECTRONIC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2497,ASTC,ASTC US Equity,ASTROTECH CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2498,AVT,AVT US Equity,AVNET INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2499,BDC,BDC US Equity,BELDEN INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2500,BELFA,BELFA US Equity,BEL FUSE INC-A,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2501,BELFB,BELFB US Equity,BEL FUSE INC-B,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2502,BHE,BHE US Equity,BENCHMARK ELECTR,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2503,BMI,BMI US Equity,BADGER METER INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2504,CDW,CDW US Equity,CDW CORP/DE,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2505,CETX,CETX US Equity,CEMTREX INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2506,CGNX,CGNX US Equity,COGNEX CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2507,CLMB,CLMB US Equity,CLIMB GLOBAL SOL,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2508,CNXN,CNXN US Equity,PC CONNECTION,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2509,CODA,CODA US Equity,CODA OCTOPUS GRO,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2510,COHR,COHR US Equity,COHERENT CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2511,CPSH,CPSH US Equity,CPS TECHNOLOGIES,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2512,CTS,CTS US Equity,CTS CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2513,CXT,CXT US Equity,CRANE NXT CO,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2514,DAIO,DAIO US Equity,DATA I/O CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2515,DAKT,DAKT US Equity,DAKTRONICS INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2516,DGLY,DGLY US Equity,DIGITAL ALLY INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2517,ELSE,ELSE US Equity,ELECTRO-SENSORS,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2518,EVLV,EVLV US Equity,EVOLV TECHNOLOGI,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2519,FARO,FARO US Equity,FARO TECH,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2520,FCUV,FCUV US Equity,FOCUS UNIVERSAL,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2521,FEIM,FEIM US Equity,FREQUENCY ELECT,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2522,FLEX,FLEX US Equity,FLEX LTD,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2523,FORD,FORD US Equity,FORWARD INDS INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2524,GLW,GLW US Equity,CORNING INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2525,INGM,INGM US Equity,INGRAM MICRO HOL,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2526,INVE,INVE US Equity,IDENTIV INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2527,IPGP,IPGP US Equity,IPG PHOTONICS,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2528,ITRI,ITRI US Equity,ITRON INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2529,JBL,JBL US Equity,JABIL INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2530,KE,KE US Equity,KIMBALL ELECTRON,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2531,KEYS,KEYS US Equity,KEYSIGHT TEC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2532,KN,KN US Equity,KNOWLES CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2533,KTCC,KTCC US Equity,KEY TRONIC CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2534,LASR,LASR US Equity,NLIGHT INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2535,LFUS,LFUS US Equity,LITTELFUSE INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2536,LGL,LGL US Equity,LGL GROUP INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2537,LGL/WS,LGL/WS US Equity,LGL GROUP -CW25,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2538,LIDR,LIDR US Equity,AEYE INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2539,LINK,LINK US Equity,INTERLINK ELEC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2540,LPTH,LPTH US Equity,LIGHTPATH TECH-A,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2541,LWLG,LWLG US Equity,LIGHTWAVE LOGIC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2542,MASS,MASS US Equity,908 DEVICES INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2543,MEI,MEI US Equity,METHODE ELEC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2544,MIR,MIR US Equity,MIRION TECHNOLOG,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2545,MPTI,MPTI US Equity,M-TRON INDUS,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2546,MSAI,MSAI US Equity,MULTISENSOR AI H,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2547,MVIS,MVIS US Equity,MICROVISION INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2548,NOVT,NOVT US Equity,NOVANTA INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2549,NSIT,NSIT US Equity,INSIGHT ENTERPRI,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2550,NSSC,NSSC US Equity,NAPCO SECURITY,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2551,NSYS,NSYS US Equity,NORTECH SYSTEMS,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2552,OPTX,OPTX US Equity,SYNTEC OPTICS HO,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2553,OSIS,OSIS US Equity,OSI SYSTEMS INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2554,OUST,OUST US Equity,OUSTER INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2555,PAR,PAR US Equity,PAR TECHNOLOGY,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2556,PLUS,PLUS US Equity,EPLUS INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2557,PLXS,PLXS US Equity,PLEXUS CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2558,RCAT,RCAT US Equity,RED CAT HOLDINGS,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2559,REFR,REFR US Equity,RESEARCH FRONT,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2560,RELL,RELL US Equity,RICHARDSON ELEC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2561,RFIL,RFIL US Equity,RF INDS,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2562,ROG,ROG US Equity,ROGERS CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2563,SANM,SANM US Equity,SANMINA CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2564,SCSC,SCSC US Equity,SCANSOURCE INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2565,SGMA,SGMA US Equity,SIGMATRON INTL,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2566,SMRT,SMRT US Equity,SMARTRENT INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2567,SNX,SNX US Equity,TD SYNNEX CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2568,SOBR,SOBR US Equity,SOBR SAFE INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2569,SOTK,SOTK US Equity,SONO-TEK CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2570,STAI,STAI US Equity,SCANTECH AI SYST,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2571,TAIT,TAIT US Equity,TAITRON COMPONEN,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2572,TDY,TDY US Equity,TELEDYNE TECH,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2573,TRMB,TRMB US Equity,TRIMBLE INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2574,TTMI,TTMI US Equity,TTM TECHNOLOGIES,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2575,UMAC,UMAC US Equity,UNUSUAL MACHINES,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2576,UUU,UUU US Equity,UNIVERSAL SECUR,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2577,VNT,VNT US Equity,VONTIER CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2578,VPG,VPG US Equity,VISHAY PRECI,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2579,VRME,VRME US Equity,VERIFYME INC,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2580,VSH,VSH US Equity,VISHAY INTERTECH,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2581,VUZI,VUZI US Equity,VUZIX CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2582,WRAP,WRAP US Equity,WRAP TECHNOLOGIE,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2583,ZBRA,ZBRA US Equity,ZEBRA TECH CORP,8,Information Technology,23,"Electronic Equipment, Instruments & Components"
+2584,AKAM,AKAM US Equity,AKAMAI TECHNOLOG,8,Information Technology,37,IT Services
+2585,APLD,APLD US Equity,APPLIED DIGITAL,8,Information Technology,37,IT Services
+2586,ASGN,ASGN US Equity,ASGN INC,8,Information Technology,37,IT Services
+2587,BASE,BASE US Equity,COUCHBASE INC,8,Information Technology,37,IT Services
+2588,BBAI,BBAI US Equity,BIGBEAR.AI HOLDI,8,Information Technology,37,IT Services
+2589,BIGC,BIGC US Equity,BIGCOMMERCE-1,8,Information Technology,37,IT Services
+2590,BLZE,BLZE US Equity,BACKBLAZE INC-A,8,Information Technology,37,IT Services
+2591,BNAI,BNAI US Equity,BRAND ENGAGEMENT,8,Information Technology,37,IT Services
+2592,CISO,CISO US Equity,CISO GLOBAL INC,8,Information Technology,37,IT Services
+2593,CRWV,CRWV US Equity,COREWEAVE I-CL A,8,Information Technology,37,IT Services
+2594,CSAI,CSAI US Equity,CLOUDASTRUCTURE,8,Information Technology,37,IT Services
+2595,CSPI,CSPI US Equity,CSP INC,8,Information Technology,37,IT Services
+2596,CTM,CTM US Equity,CASTELLUM INC,8,Information Technology,37,IT Services
+2597,CTSH,CTSH US Equity,COGNIZANT TECH-A,8,Information Technology,37,IT Services
+2598,CXDO,CXDO US Equity,CREXENDO INC,8,Information Technology,37,IT Services
+2599,DOCN,DOCN US Equity,DIGITALOCEAN HOL,8,Information Technology,37,IT Services
+2600,DOX,DOX US Equity,AMDOCS LTD,8,Information Technology,37,IT Services
+2601,DTST,DTST US Equity,DATA STORAGE COR,8,Information Technology,37,IT Services
+2602,DXC,DXC US Equity,DXC TECHNOLOGY C,8,Information Technology,37,IT Services
+2603,EPAM,EPAM US Equity,EPAM SYSTEMS INC,8,Information Technology,37,IT Services
+2604,FSLY,FSLY US Equity,FASTLY INC -CL A,8,Information Technology,37,IT Services
+2605,GDDY,GDDY US Equity,GODADDY INC-A,8,Information Technology,37,IT Services
+2606,GDYN,GDYN US Equity,GRID DYNAMICS HO,8,Information Technology,37,IT Services
+2607,HCKT,HCKT US Equity,HACKETT GROUP,8,Information Technology,37,IT Services
+2608,IBM,IBM US Equity,IBM,8,Information Technology,37,IT Services
+2609,III,III US Equity,INFORMATION SERV,8,Information Technology,37,IT Services
+2610,IT,IT US Equity,GARTNER INC,8,Information Technology,37,IT Services
+2611,KD,KD US Equity,KYNDRYL HOLDINGS,8,Information Technology,37,IT Services
+2612,MDB,MDB US Equity,MONGODB INC,8,Information Technology,37,IT Services
+2613,NET,NET US Equity,CLOUDFLARE INC-A,8,Information Technology,37,IT Services
+2614,OKTA,OKTA US Equity,OKTA INC,8,Information Technology,37,IT Services
+2615,RSSS,RSSS US Equity,RESEARCH SOLUTIO,8,Information Technology,37,IT Services
+2616,RXT,RXT US Equity,RACKSPACE TECHNO,8,Information Technology,37,IT Services
+2617,SNOW,SNOW US Equity,SNOWFLAKE INC-A,8,Information Technology,37,IT Services
+2618,TSSI,TSSI US Equity,TSS INC,8,Information Technology,37,IT Services
+2619,TWLO,TWLO US Equity,TWILIO INC - A,8,Information Technology,37,IT Services
+2620,UIS,UIS US Equity,UNISYS CORP,8,Information Technology,37,IT Services
+2621,VRAR,VRAR US Equity,GLIMPSE GROUP IN,8,Information Technology,37,IT Services
+2622,VRSN,VRSN US Equity,VERISIGN INC,8,Information Technology,37,IT Services
+2623,WYY,WYY US Equity,WIDEPOINT CORP,8,Information Technology,37,IT Services
+2624,XTIA,XTIA US Equity,XTI AEROSPACE IN,8,Information Technology,37,IT Services
+2625,ACLS,ACLS US Equity,AXCELIS TECH INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2626,ACMR,ACMR US Equity,ACM RESEARCH-A,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2627,ADI,ADI US Equity,ANALOG DEVICES,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2628,AEHR,AEHR US Equity,AEHR TEST SYSTEM,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2629,ALAB,ALAB US Equity,ASTERA LABS INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2630,ALGM,ALGM US Equity,ALLEGRO MICROSYS,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2631,ALMU,ALMU US Equity,AELUMA INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2632,AMAT,AMAT US Equity,APPLIED MATERIAL,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2633,AMBA,AMBA US Equity,AMBARELLA INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2634,AMD,AMD US Equity,ADV MICRO DEVICE,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2635,AMKR,AMKR US Equity,AMKOR TECH INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2636,AOSL,AOSL US Equity,ALPHA & OMEGA SE,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2637,ASTI,ASTI US Equity,ASCENT SOLAR TEC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2638,ASYS,ASYS US Equity,AMTECH SYS INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2639,ATOM,ATOM US Equity,ATOMERA INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2640,AVGO,AVGO US Equity,BROADCOM INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2641,AXTI,AXTI US Equity,AXT INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2642,BZAI,BZAI US Equity,BLAIZE HOLDINGS,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2643,CEVA,CEVA US Equity,CEVA INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2644,COHU,COHU US Equity,COHU INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2645,CRDO,CRDO US Equity,CREDO TECHNOLOGY,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2646,CRUS,CRUS US Equity,CIRRUS LOGIC INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2647,CVV,CVV US Equity,CVD EQUIPMENT CO,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2648,DIOD,DIOD US Equity,DIODES INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2649,DVLT,DVLT US Equity,DATAVAULT AI INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2650,ENPH,ENPH US Equity,ENPHASE ENERGY,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2651,ENTG,ENTG US Equity,ENTEGRIS INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2652,FORM,FORM US Equity,FORMFACTOR INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2653,FSLR,FSLR US Equity,FIRST SOLAR INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2654,GCTS,GCTS US Equity,GCT SEMICONDUCTO,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2655,GFS,GFS US Equity,GLOBALFOUNDRIES,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2656,GSIT,GSIT US Equity,GSI TECHNOLOGY,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2657,ICHR,ICHR US Equity,ICHOR HOLDINGS L,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2658,INDI,INDI US Equity,INDIE SEMICOND-A,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2659,INTC,INTC US Equity,INTEL CORP,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2660,INTT,INTT US Equity,INTEST CORP,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2661,KLAC,KLAC US Equity,KLA CORP,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2662,KOPN,KOPN US Equity,KOPIN CORP,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2663,LRCX,LRCX US Equity,LAM RESEARCH,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2664,LSCC,LSCC US Equity,LATTICE SEMICOND,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2665,MCHP,MCHP US Equity,MICROCHIP TECH,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2666,MKSI,MKSI US Equity,MKS INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2667,MOBX,MOBX US Equity,MOBIX LABS INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2668,MPWR,MPWR US Equity,MONOLITHIC POWER,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2669,MRAM,MRAM US Equity,EVERSPIN TECHNOL,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2670,MRVL,MRVL US Equity,MARVELL TECHNOLO,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2671,MTSI,MTSI US Equity,MACOM TECHNOLOGY,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2672,MU,MU US Equity,MICRON TECH,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2673,MXL,MXL US Equity,MAXLINEAR,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2674,NVDA,NVDA US Equity,NVIDIA CORP,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2675,NVEC,NVEC US Equity,NVE CORP,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2676,NVTS,NVTS US Equity,NAVITAS SEMICOND,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2677,OLED,OLED US Equity,UNIVERSAL DISPLA,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2678,ON,ON US Equity,ON SEMICONDUCTOR,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2679,ONTO,ONTO US Equity,ONTO INNOVATION,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2680,PDFS,PDFS US Equity,PDF SOLUTIONS,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2681,PENG,PENG US Equity,PENGUIN SOLUTION,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2682,PI,PI US Equity,IMPINJ INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2683,PLAB,PLAB US Equity,PHOTRONICS INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2684,POWI,POWI US Equity,POWER INTEGRATIO,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2685,PRSO,PRSO US Equity,PERASO INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2686,PXLW,PXLW US Equity,PIXELWORKS INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2687,QCOM,QCOM US Equity,QUALCOMM INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2688,QRVO,QRVO US Equity,QORVO INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2689,QUIK,QUIK US Equity,QUICKLOGIC CORP,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2690,RGTI,RGTI US Equity,RIGETTI COMPUTIN,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2691,RMBS,RMBS US Equity,RAMBUS INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2692,SITM,SITM US Equity,SITIME CORP,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2693,SKYT,SKYT US Equity,SKYWATER TECHNOL,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2694,SLAB,SLAB US Equity,SILICON LABS,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2695,SMTC,SMTC US Equity,SEMTECH CORP,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2696,SWKS,SWKS US Equity,SKYWORKS SOLUTIO,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2697,SYNA,SYNA US Equity,SYNAPTICS INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2698,TER,TER US Equity,TERADYNE INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2699,TRT,TRT US Equity,TRIO-TECH INTL,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2700,TXN,TXN US Equity,TEXAS INSTRUMENT,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2701,UCTT,UCTT US Equity,ULTRA CLEAN HOLD,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2702,VECO,VECO US Equity,VEECO INSTRUMENT,8,Information Technology,56,Semiconductors & Semiconductor Equipment
+2703,WOLF,WOLF US Equity,WOLFSPEED INC,8,Information Technology,56,Semiconductors & Semiconductor Equipment
