@@ -1,5 +1,5 @@
 ---
-title: "python_test"
+title: "stock screening"
 format: html
 ---
 
@@ -22,40 +22,183 @@ I need to build code to get closing prices for stocks
 
 I need a list of all US equity stocks. Code juse uses US equity so I either have a list with just symbols or remove US EQUITY with code before running.
 
-```{python}
-
-import yfinance as yf
-import pandas as pd
-
-# Load Excel file
-file_path = r"ticker_sample.xlsx"
-df = pd.read_excel(file_path)
-
-# Define time frame
-start_date = "2024-05-13"
-end_date = "2024-06-07"
-
-# Get daily closing prices with each date in its own column
-def get_closing_prices(ticker):
-    try:
-        data = yf.Ticker(ticker).history(start=start_date, end=end_date)
-        closes = data["Close"]
-        closes.index = closes.index.strftime("%Y-%m-%d")
-        return closes
-    except:
-        return pd.Series()
-
-# Apply and expand into separate columns
-closes_df = df["ticker"].apply(get_closing_prices).apply(pd.Series)
-closes_df.columns.name = None
-
-# Combine and save
-result = pd.concat([df, closes_df], axis=1)
-result.to_excel(r"ticker_sample_closes.xlsx", index=False)
 
 
+**Pre-load stock data**
+
+```{r, message=FALSE, warning=FALSE}
+# i updated r studiio and this code is not displaying options. 
+# typing 2 will select my google drive which I previously use. This needs to be fixed. 
+# I shoul also make own env and variables for this repo. 
+# ── PRELOAD TICKER DATA ────────────────────────────────────
+if (!exists("ticker_data")) {
+
+  if (!require("pacman")) install.packages("pacman")
+  pacman::p_load(googledrive, readr, dplyr)
+
+  ticker <- "AAPL"  # define ticker globally for reuse
+
+  if (!googledrive::drive_has_token()) drive_auth()
+  file <- drive_get(path = "stock_data/fact_close_price.csv")
+  temp_path <- tempfile(fileext = ".csv")
+  drive_download(file, path = temp_path, overwrite = TRUE)
+
+  filtered_data <- list()
+
+  chunk_callback <- function(x, pos) {
+    x <- filter(x, ticker == !!ticker)
+    if (nrow(x) > 0) filtered_data[[length(filtered_data) + 1]] <<- x
+  }
+
+  read_csv_chunked(
+    file = temp_path,
+    callback = SideEffectChunkCallback$new(chunk_callback),
+    chunk_size = 100000,
+    col_types = cols_only(
+      ticker = col_character(),
+      date_id = col_character(),
+      date = col_character(),
+      close_price = col_double(),
+      dayHigh = col_double(),
+      dayLow = col_double(),
+      volume = col_double()
+    )
+  )
+
+  ticker_data <- bind_rows(filtered_data) |> 
+    mutate(date = as.Date(date))  # parsed once only
+}
+
+rm(file, filtered_data, chunk_callback);
+
+```
 
 
+
+
+```{r}
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(readr, dplyr, lubridate, dygraphs, xts)
+
+# ── PARAMETERS ─────────────────────────────────────────────
+date_start <- as.Date("2024-06-10")
+date_end <- as.Date("2025-07-03")
+# ───────────────────────────────────────────────────────────
+
+# Filter data
+df <- ticker_data |>
+  filter(date >= date_start & date <= date_end) |>
+  arrange(date)
+
+# Convert to xts object
+xts_data <- xts(df[, c("close_price", "dayHigh", "dayLow")], order.by = df$date)
+
+# Plot with dygraph
+dygraph(xts_data, main = paste0(ticker, " Price Range: ", date_start, " to ", date_end)) |>
+  dySeries("close_price", label = "Close Price") |>
+  dySeries("dayHigh", label = "Day High") |>
+  dySeries("dayLow", label = "Day Low") |>
+  dyOptions(drawGrid = TRUE) |>
+  dyRangeSelector()
+
+
+
+```
+
+
+
+
+
+
+
+
+
+This code returns the top and bottom percent change difference
+
+- from fact_close_price - Includes: ticker_id, ticker, date, close_price, volume
+- from index_main - Includes: ticker_id, sector, industry
+- joins sector and industry to the pivot_df using ticker_id
+
+
+
+```{r}
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(googledrive, readr, dplyr, lubridate, tidyr)
+
+# ── PARAMETERS ─────────────────────────────────────────────
+previous_date <- as.Date("2025-06-30")
+current_date  <- as.Date("2025-07-01")
+# ───────────────────────────────────────────────────────────
+
+# Authenticate
+if (!googledrive::drive_has_token()) drive_auth()
+
+# Load Drive file
+file <- drive_get(path = "stock_data/fact_close_price.csv")
+temp_path <- tempfile(fileext = ".csv")
+drive_download(file, path = temp_path, overwrite = TRUE)
+
+# select columns to read from fact_close_price (1 of 2)
+df <- read_csv(
+  file = temp_path,
+  col_types = cols_only(
+    ticker_id = col_double(),
+    ticker = col_character(),
+    date = col_character(),
+    close_price = col_double(),
+    volume = col_double()
+  )
+) |>
+  mutate(date = as.Date(date)) |>
+  filter(date %in% c(previous_date, current_date)) |>
+  select(ticker_id, ticker, date, close_price, volume) # select columns to include from fact_close_price (2 of 2)
+
+# Pivot and calculate % change
+pivot_df <- df |>
+  pivot_wider(
+    names_from = date,
+    values_from = c(close_price, volume),
+    names_sep = "_"
+  ) |>
+  rename_with(
+    ~ c("price_prev", "price_curr", "volume_prev", "volume_curr"),
+    .cols = c(
+      paste0("close_price_", previous_date),
+      paste0("close_price_", current_date),
+      paste0("volume_", previous_date),
+      paste0("volume_", current_date)
+    )
+  ) |>
+  filter(!is.na(price_prev) & !is.na(price_curr)) |>
+  mutate(
+    percent_change = 100 * (price_curr - price_prev) / price_prev
+  ) |>
+  arrange(desc(percent_change))
+
+# Add sector from index_main.csv
+index_df <- read_csv("https://raw.githubusercontent.com/1Ramirez7/fintech-notebook/refs/heads/main/stock_trading_models/stock_screening/sql/index_main.csv") |>
+  select(ticker_id, sector, industry) # select columns to join from index_main to pivot_df (sector, idustry, etc)
+pivot_df <- pivot_df |> # join to pivo_df
+  left_join(index_df, by = "ticker_id") # make sure to add variable to result select.
+
+# Results
+top_10 <- head(pivot_df, 10)
+bottom_10 <- tail(pivot_df, 10)
+
+# Combine for output
+result <- bind_rows(
+  top_10 |> mutate(rank_group = "Top 10"),
+  bottom_10 |> mutate(rank_group = "Bottom 10")
+) |>
+  select(rank_group, ticker, price_prev, price_curr, percent_change, volume_prev, volume_curr, sector, industry)
+
+rm(df, pivot_df, index_df); gc()
+
+print(result)
+
+# I just thought of doing a time series plot for volume to see if i notice random spikes before large spikes in price
+# have code like in my fetch colab file. this code would have the sector and industry volume totals. 
 ```
 
 
@@ -70,530 +213,258 @@ result.to_excel(r"ticker_sample_closes.xlsx", index=False)
 
 
 
-# Useful codes
 
 
 
 
-**This cell displays all informationa availbale vie yfinance**
-
-```{python}
-# This cell displays all informationa availbale vie yfinance
-import yfinance as yf
-
-# Get full info for CVX
-info = yf.Ticker("CVX").info
-
-# Print all keys and values in sorted order
-for key in sorted(info.keys()):
-    print(f"{key}: {info[key]}")
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Troubleshooting
+
+
+```{r, message=FALSE, warning=FALSE}
+# This cell returns info about file laoded. EG: na, data type, columns.
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(googledrive, readr, dplyr)
+
+# Authenticate Google Drive
+if (!drive_has_token()) drive_auth()
+
+# Load and download the file
+file <- drive_get(path = "stock_data/fact_close_price.csv")
+temp_path <- tempfile(fileext = ".csv")
+drive_download(file, path = temp_path, overwrite = TRUE)
+
+# Read full file
+df <- read_csv(temp_path)
+
+# Summary: data types
+glimpse(df)
+
+# Summary: filled cells & NAs
+cat("\nFilled cells (non-NA):", sum(!is.na(df)))
+cat("\nMissing cells (NA):", sum(is.na(df)))
+cat("\n\nColumn-wise NA counts:\n")# per column breakdown
+print(colSums(is.na(df)))
+
+# Drop df to save memory
+rm(df)
+gc()
 ```
 
 
 
-**This chunk gets Setor and industry names.**
 
-```{python}
-# This chunk gets Setor and industry names.
-# ticker column must just have ticker symbol only
+```{r}
+# code just downloads two target days. This will be to check if data was fetch correctly. 
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(googledrive, readr, dplyr, lubridate)
 
-import yfinance as yf
-import pandas as pd
+# ── PARAMETERS ─────────────────────────────────────────────
+previous_date <- as.Date("2025-06-20")
+current_date  <- as.Date("2025-06-23")
+local_output  <- "filtered_close_price.csv"
+# ───────────────────────────────────────────────────────────
 
-# Load Excel file
-file_path = r"ticker_sample.xlsx"
-df = pd.read_excel(file_path)
+# Authenticate & locate file
+if (!googledrive::drive_has_token()) drive_auth()
+file <- drive_get(path = "stock_data/fact_close_price.csv")
+temp_path <- tempfile(fileext = ".csv")
+drive_download(file, path = temp_path, overwrite = TRUE)
 
-# Get sector and industry info
-def get_sector_industry(ticker):
-    try:
-        info = yf.Ticker(ticker).info
-        return pd.Series([info.get("sector"), info.get("industry")])
-    except:
-        return pd.Series([None, None])
+# Read & filter
+df <- read_csv(
+  file = temp_path,
+  col_types = cols_only(
+    ticker_id = col_double(),
+    ticker = col_character(),
+    date = col_character(),
+    close_price = col_double(),
+    volume = col_double()
+  )
+) |>
+  mutate(date = as.Date(date)) |>
+  filter(date %in% c(previous_date, current_date)) |>
+  select(ticker_id, ticker, date, close_price, volume)
 
-# Apply to Ticker column
-df[["Sector", "Industry"]] = df["ticker"].apply(get_sector_industry)
+write_csv(df, local_output)
+cat("Filtered data saved to:", local_output, "\n")
 
-# Save updated file
-output_path = r"ticker_sample_one.xlsx"
-df.to_excel(output_path, index=False)
 
+rm(df, file, previous_date, current_date, local_output); gc()
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
