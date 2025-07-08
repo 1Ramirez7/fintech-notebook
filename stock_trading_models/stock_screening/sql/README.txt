@@ -1,0 +1,1 @@
+This file is just a copy of the sql folder in the QuantGazer repo. This is so I can use the raw links since the QuantGazer repo is private. 

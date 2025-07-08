@@ -1,0 +1,21 @@
+ticker_id,ticker,ticker-full,short-name,sector,industry,sector_id
+1,ASTS,ASTS US Equity,AST SPACEMOBILE,Communication Services,Diversified Telecommunication Services,1
+2,ATEX,ATEX US Equity,ANTERIX INC,Communication Services,Diversified Telecommunication Services,1
+3,ATNI,ATNI US Equity,ATN INTERNATIONA,Communication Services,Diversified Telecommunication Services,1
+4,BAND,BAND US Equity,BANDWIDTH INC-A,Communication Services,Diversified Telecommunication Services,1
+5,CCOI,CCOI US Equity,COGENT COMMUNICA,Communication Services,Diversified Telecommunication Services,1
+6,FYBR,FYBR US Equity,FRONTIER COMMUNI,Communication Services,Diversified Telecommunication Services,1
+7,GSAT,GSAT US Equity,GLOBALSTAR INC,Communication Services,Diversified Telecommunication Services,1
+8,IDT,IDT US Equity,IDT CORP-CLASS B,Communication Services,Diversified Telecommunication Services,1
+9,IQST,IQST US Equity,IQSTEL INC,Communication Services,Diversified Telecommunication Services,1
+10,IRDM,IRDM US Equity,IRIDIUM COMMUNIC,Communication Services,Diversified Telecommunication Services,1
+11,LILA,LILA US Equity,LIBERTY LATI-A,Communication Services,Diversified Telecommunication Services,1
+12,LILAK,LILAK US Equity,LIBERTY LATI-C,Communication Services,Diversified Telecommunication Services,1
+13,LUMN,LUMN US Equity,LUMEN TECHNOLOGI,Communication Services,Diversified Telecommunication Services,1
+14,NXPL,NXPL US Equity,NEXTPLAT CORP,Communication Services,Diversified Telecommunication Services,1
+15,SHEN,SHEN US Equity,SHENANDOAH TELEC,Communication Services,Diversified Telecommunication Services,1
+16,T,T US Equity,AT&T INC,Communication Services,Diversified Telecommunication Services,1
+17,VZ,VZ US Equity,VERIZON COMMUNIC,Communication Services,Diversified Telecommunication Services,1
+18,AMC,AMC US Equity,AMC ENTERTAINMEN,Communication Services,Entertainment,1
+19,BATRA,BATRA US Equity,ATLANTA BRAVES H,Communication Services,Entertainment,1
+20,BATRK,BATRK US Equity,ATLANTA BRAVES H,Communication Services,Entertainment,1
